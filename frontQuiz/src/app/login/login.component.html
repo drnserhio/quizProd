@@ -1,0 +1,83 @@
+
+<!-- W3hubs.com - Download Free Responsive Website Layout Templates designed on HTML5
+   CSS3,Bootstrap,Tailwind CSS which are 100% Mobile friendly. w3Hubs all Layouts are responsive
+   cross browser supported, best quality world class designs. -->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300i,400,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+  <title>Bootstrap 5 Login Form</title>
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+      height: 100vh;
+      font-family: "Nunito Sans";
+    }
+
+    .form-control {
+      line-height: 2;
+    }
+
+    .bg-custom {
+      background-color: #6C63FF;
+    }
+
+    .btn-custom {
+      background-color: #3e3d56;
+      color: #fff;
+    }
+
+    .btn-custom:hover {
+      background-color: #33313f;
+      color: #fff;
+    }
+
+    label {
+      color: #fff;
+    }
+
+    a,
+    a:hover {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    a,
+    a:hover {
+      text-decoration: none;
+    }
+
+    @media(max-width: 932px) {
+      .display-none {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="container-fluid">
+<div class="row m-0 h-100">
+  <div class="col p-0 bg-custom d-flex justify-content-center align-items-center flex-column w-100">
+    <form #sign="ngForm" class="w-70 text-center" action="#">
+      <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">Username</label>
+        <input type="text" class="form-control" id="exampleFormControlInput1" name="username" placeholder="username"
+              ngModel required>
+      </div>
+      <div class="mb-3">
+        <label for="exampleFormControlInput2" class="form-label">Password</label>
+        <input type="text" class="form-control" id="exampleFormControlInput2" name="password" placeholder="password"
+              ngModel required>
+      </div>
+      <button type="button" class="btn btn-custom btn-lg btn-block mt-3" [disabled]="sign.invalid" (click)="signIn(sign.value)">Login Now</button>
+    </form>
+  </div>
+</div>
+</body>
+
+</html>
