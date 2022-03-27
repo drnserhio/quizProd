@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
           console.log(response);
           const token = response.headers.get(HeaderType.JWT_TOKEN);
           this.authService.saveToken(token!);
-          this.authService.saveUserToLocalCahe(response.body?.username!);
+          this.authService.saveUsernameToLocalCahe(response.body?.username!);
           this.router.navigateByUrl('/profile');
           this.loadingIcon = false;
         },

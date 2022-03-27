@@ -12,6 +12,7 @@ import { ListQuizComponent } from './list-quiz/list-quiz.component';
 import {AuthService} from "./service/auth-service.service";
 import {UserService} from "./service/user.service";
 import {AuthInterceptor} from "./interceptor/auth-interceptor";
+import { SelectQuizComponent } from './select-quiz/select-quiz.component';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import {AuthInterceptor} from "./interceptor/auth-interceptor";
     RegisterComponent,
     ProfileComponent,
     ListQuizComponent,
+    SelectQuizComponent,
   ],
   imports: [
     BrowserModule,

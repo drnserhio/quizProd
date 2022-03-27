@@ -7,25 +7,25 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Table(name = "quizes")
 public class Quiz extends DefaultEntity {
 
     private String name;
-    private Date dateStart;
-    private Date dateEnd;
     private String notice;
-    private long countQuestion;
 
-    @OneToMany(cascade = ALL, fetch = LAZY)
+    @OneToMany(cascade = ALL, fetch = EAGER)
     private List<Question> questions;
+
+
 }

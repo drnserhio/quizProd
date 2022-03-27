@@ -78,6 +78,11 @@ public record UserServiceImpl(UserDao userDao) implements UserService {
         return userDao.answerTheQuestion(quizId, username, answer, question);
     }
 
+    @Override
+    public void insertQuizToUserAfterTest(Long quizId, Long userId) {
+        userDao.insertQuizToUserAfterTest(quizId, userId);
+    }
+
 
     @Override
     public UserDetails loadUserByUsername(String username)

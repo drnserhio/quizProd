@@ -20,6 +20,8 @@ public interface UserDao extends BaseDao<User>{
     Quiz onSelectQuiz(Long quizId);
 
     boolean answerTheQuestion(Long quizId, String username, String answer, Question question) throws QuizExistsException;
+
+    void insertQuizToUserAfterTest(Long quizId, Long userId);
 }
 
 

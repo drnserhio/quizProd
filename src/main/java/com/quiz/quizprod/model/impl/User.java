@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
@@ -21,7 +22,7 @@ public class User extends DefaultEntity {
     private String password;
     private String role;
 
-    @OneToMany(cascade = ALL, fetch = LAZY)
+    @OneToMany(cascade = ALL, fetch = EAGER)
     private List<Quiz> quizzes;
 
 }

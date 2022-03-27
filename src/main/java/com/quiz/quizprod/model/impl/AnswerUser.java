@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.Date;
 
 @Entity
 @AllArgsConstructor
@@ -21,4 +22,7 @@ public class AnswerUser extends DefaultEntity {
     private String usernameActive;
     private String idCode;
     private boolean isSuccessfulAnswer;
+
+    private Date dateStart;
+    private Date dateEnd;
 }

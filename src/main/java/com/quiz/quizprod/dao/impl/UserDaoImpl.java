@@ -64,6 +64,8 @@ public class UserDaoImpl implements UserDao {
         } catch (Exception e) {
             entityManager.close();
             e.printStackTrace();
+        } finally {
+            entityManager.close();
         }
         return user;
     }
@@ -178,14 +180,16 @@ public class UserDaoImpl implements UserDao {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         List<Quiz> quizzes = new ArrayList<>();
         try {
-            quizzes =  entityManager
-                    .createNativeQuery("select id, count_question, date_end, date_start, name, notice from quizes where id not in (select quizzes_id from users_quizzes where user_id =:userId)")
+            quizzes = entityManager
+                    .createNativeQuery("select id, name, notice from quizes where id not in (select quizzes_id from users_quizzes where user_id =:userId)", Quiz.class)
                     .setParameter("userId", userId)
                     .setHint(QueryHints.HINT_READONLY, true)
                     .getResultList();
         } catch (Exception e) {
             entityManager.close();
             e.printStackTrace();
+        } finally {
+            entityManager.close();
         }
         return quizzes;
     }
@@ -264,6 +268,25 @@ public class UserDaoImpl implements UserDao {
             e.printStackTrace();
         }
         return quiz;
+    }
+
+    @Override
+    public void insertQuizToUserAfterTest(Long quizId, Long userId) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            entityManager.createNativeQuery("insert into users_quizzes values (:userId, :quizId)")
+                    .setParameter("userId", userId)
+                    .setParameter("quizId", quizId)
+                    .executeUpdate();
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
     }
 
 

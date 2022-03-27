@@ -1,5 +1,6 @@
 package com.quiz.quizprod.resource.impl;
 
+import com.quiz.quizprod.exception.QuizExistsException;
 import com.quiz.quizprod.model.impl.Quiz;
 import com.quiz.quizprod.resource.DefaultResource;
 import com.quiz.quizprod.service.QuizService;
@@ -16,19 +17,22 @@ public record QuizResource(QuizService quizService) implements DefaultResource<Q
 
     @PutMapping("/update")
     @Override
-    public Quiz update(Quiz update) {
+    public Quiz update(
+            @RequestBody Quiz update) {
         return quizService.update(update);
     }
 
     @PostMapping("/save")
     @Override
-    public Quiz save(Quiz save) throws Exception {
+    public Quiz save(
+            @RequestBody Quiz save) throws Exception {
         return quizService.save(save);
     }
 
     @GetMapping("/get/{id}")
     @Override
-    public Quiz findById(Long id) {
+    public Quiz findById(
+            @PathVariable Long id) {
         return quizService.findById(id);
     }
 
@@ -40,13 +44,15 @@ public record QuizResource(QuizService quizService) implements DefaultResource<Q
 
     @PostMapping("/get/table")
     @Override
-    public ResponseTable<Quiz> findAll(RequestTable requestTable) {
+    public ResponseTable<Quiz> findAll(
+            @RequestBody RequestTable requestTable) {
         return quizService.findAll(requestTable);
     }
 
     @GetMapping("/delete/{id}")
     @Override
-    public boolean deleteById(Long id) throws Exception {
+    public boolean deleteById(
+            @PathVariable Long id) throws Exception {
         return quizService.deleteById(id);
     }
 }

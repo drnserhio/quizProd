@@ -100,6 +100,13 @@ public class UserResource implements DefaultResource<User> {
         return userService.answerTheQuestion(quizId, username, answer, question);
     }
 
+    @GetMapping("/save_test")
+    public void insertQuizToUserAfterTest(
+            @RequestParam("quizId") Long quizId,
+            @RequestParam("userId") Long userId) {
+        userService.insertQuizToUserAfterTest(quizId, userId);
+    }
+
     @PostMapping("/register")
     public ResponseEntity<User> register(
             @RequestBody User user)
@@ -117,6 +124,7 @@ public class UserResource implements DefaultResource<User> {
         HttpHeaders jwtHeaders = getJwtHeader(userPrincipal);
         return new ResponseEntity<>(loginUser, jwtHeaders, OK);
     }
+
 
     private HttpHeaders getJwtHeader(CustomUserPrincipal customUserPrincipal) {
         HttpHeaders headers = new HttpHeaders();

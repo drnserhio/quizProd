@@ -58,12 +58,11 @@ public class QuizDaoImpl implements QuizDao {
         } finally {
             entityManager.close();
         }
-        return null;
+        return save;
     }
 
     private void validateName(String name)
             throws QuizExistsException {
-
         if (existsByName(name)) {
             throw new QuizExistsException("quiz name already exists");
         }
