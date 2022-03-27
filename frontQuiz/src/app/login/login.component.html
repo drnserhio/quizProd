@@ -43,7 +43,7 @@
 
     a,
     a:hover {
-      color: #fff;
+      color: #212529;
       text-decoration: none;
     }
 
@@ -63,6 +63,7 @@
 <body class="container-fluid">
 <div class="row m-0 h-100">
   <div class="col p-0 bg-custom d-flex justify-content-center align-items-center flex-column w-100">
+    <h1 class="text-white-50" style="font-size: 50px">Login in</h1>
     <form #sign="ngForm" class="w-70 text-center" action="#">
       <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Username</label>
@@ -73,6 +74,16 @@
         <label for="exampleFormControlInput2" class="form-label">Password</label>
         <input type="text" class="form-control" id="exampleFormControlInput2" name="password" placeholder="password"
               ngModel required>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-12">
+          <div class="form-check">
+            <label class="small">
+              You don't have account?
+            </label>
+            <a class="card-link btn-link small" style="cursor: pointer;" routerLink="/register" > Sign up</a>
+          </div>
+        </div>
       </div>
       <button type="button" class="btn btn-custom btn-lg btn-block mt-3" [disabled]="sign.invalid" (click)="signIn(sign.value)">Login Now</button>
     </form>

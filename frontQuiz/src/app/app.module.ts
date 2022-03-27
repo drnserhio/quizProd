@@ -6,7 +6,12 @@ import { LoginComponent } from './login/login.component';
 import {AppRoutingModule} from "./app-routing.module";
 import { RegisterComponent } from './register/register.component';
 import {FormsModule} from "@angular/forms";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import { ProfileComponent } from './profile/profile.component';
+import { ListQuizComponent } from './list-quiz/list-quiz.component';
+import {AuthService} from "./service/auth-service.service";
+import {UserService} from "./service/user.service";
+import {AuthInterceptor} from "./interceptor/auth-interceptor";
 
 
 @NgModule({
@@ -14,14 +19,18 @@ import {HttpClientModule} from "@angular/common/http";
     AppComponent,
     LoginComponent,
     RegisterComponent,
+    ProfileComponent,
+    ListQuizComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [AuthService, UserService,
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

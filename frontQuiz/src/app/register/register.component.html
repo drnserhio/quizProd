@@ -23,11 +23,11 @@
     }
 
     .bg-custom {
-      background-color: #6C63FF;
+      background-color: #212529;
     }
 
     .btn-custom {
-      background-color: #3e3d56;
+      background-color: #6C63FF;
       color: #fff;
     }
 
@@ -42,7 +42,7 @@
 
     a,
     a:hover {
-      color: #fff;
+      color: #6C63FF;
       text-decoration: none;
     }
 
@@ -62,6 +62,7 @@
 <body class="container-fluid">
 <div class="row m-0 h-100">
   <div class="col p-0 bg-custom d-flex justify-content-center align-items-center flex-column w-100">
+    <h1 class="text-white-50" style="font-size: 50px">Registration</h1>
     <form #register="ngForm" class="w-70 text-center" action="#" >
       <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Username</label>
@@ -76,9 +77,10 @@
       <div class="row justify-content-center">
         <div class="col-md-12">
           <div class="form-check">
-            <a style="cursor: pointer;" class="card-link btn-link">
+            <label class="small">
               You have account?
-            </a>
+            </label>
+            <a class="card-link btn-link small" style="cursor: pointer;" routerLink="/login" > Sign in</a>
           </div>
         </div>
       </div>

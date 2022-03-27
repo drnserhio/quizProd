@@ -36,8 +36,8 @@ export class AuthService {
     localStorage.setItem('token', token);
   }
 
-  public saveUserToLocalCahe(user: User): void {
-    localStorage.setItem('user', JSON.stringify(user));
+  public saveUserToLocalCahe(userName: string): void {
+    localStorage.setItem('userName', userName);
   }
 
   public setUserToLocalCache(user: User): void {
@@ -45,8 +45,8 @@ export class AuthService {
     localStorage.setItem('user', JSON.stringify(user));
 }
 
-  public getUserFromLocalCache(): User {
-    return JSON.parse(localStorage.getItem('user')!);
+  public getUserFromLocalCache(): string {
+    return localStorage.getItem('userName')!;
   }
 
   public loadToken(): void {
