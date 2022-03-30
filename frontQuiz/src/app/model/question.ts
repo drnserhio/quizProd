@@ -1,5 +1,7 @@
 export class Question {
+  id!: number;
   question!: string;
   answer!: string;
-  qustionType!: string;
+  badFirstAnswer!: string;
+  badSecondAnswer!: string;
 }

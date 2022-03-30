@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/answerUser")
+@RequestMapping("/answers")
 public record AnswerUserResource(
         AnwerUserService anwerUserService) implements DefaultResource<AnswerUser> {
 
@@ -48,5 +48,12 @@ public record AnswerUserResource(
     @Override
     public boolean deleteById(Long id) throws Exception {
         return anwerUserService.deleteById(id);
+    }
+
+    @PostMapping("/get_passed_test")
+    public List<AnswerUser> getAllPassedTestByQuizId(
+            @RequestParam("quizId") String quizId,
+            @RequestParam("username") String username) {
+        return anwerUserService.getAllPassedTestByQuizId(quizId, username);
     }
 }

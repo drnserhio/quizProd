@@ -3,7 +3,6 @@ package com.quiz.quizprod.dao.impl;
 import com.quiz.quizprod.dao.QuizDao;
 import com.quiz.quizprod.exception.QuizExistsException;
 import com.quiz.quizprod.exception.AnswerUserFoundException;
-import com.quiz.quizprod.model.impl.Question;
 import com.quiz.quizprod.model.impl.Quiz;
 import com.quiz.quizprod.table.RequestTable;
 import com.quiz.quizprod.table.ResponseTable;
@@ -71,7 +70,6 @@ public class QuizDaoImpl implements QuizDao {
     private boolean existsByName(String name) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         return entityManager.createQuery("select quiz from Quiz quiz where quiz.name =:name")
-                .setHint(QueryHints.HINT_READONLY, true)
                 .setParameter("name", name)
                 .getFirstResult() == 1;
     }
@@ -82,7 +80,6 @@ public class QuizDaoImpl implements QuizDao {
         Quiz quiz = null;
         try {
             quiz = (Quiz) entityManager.createQuery("select qiz from Quiz qiz where qiz.id =:id")
-                    .setHint(QueryHints.HINT_READONLY, true)
                     .setParameter("id", id)
                     .getResultList()
                     .get(0);
@@ -104,6 +101,8 @@ public class QuizDaoImpl implements QuizDao {
         } catch (Exception e) {
             entityManager.close();
             e.printStackTrace();
+        } finally {
+            entityManager.close();
         }
         return quizzes;
     }
@@ -140,23 +139,22 @@ public class QuizDaoImpl implements QuizDao {
     @Override
     public boolean existsById(Long id) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        return entityManager.createQuery("select count(id) from Quiz where id =: id")
+        return entityManager.createQuery("select count(quiz) from Quiz quiz where quiz.id =:id")
                 .setParameter("id", id)
-                .setHint(QueryHints.HINT_READONLY, true)
                 .getFirstResult() == 1;
     }
 
 
     @Override
-    public boolean creatQuizWithQuestion(Long quizId, Question... question)
+    public boolean creatQuizWithQuestion(Long quizId, Long... questionId)
             throws QuizExistsException {
         boolean isSuccessful = false;
-        if (!existsById(quizId)) {
+        if (findById(quizId) == null) {
             throw new QuizExistsException("Quiz not found.");
         }
         try {
-            for (Question qus: question) {
-                insertToQuiz(quizId, qus);
+            for (Long qusId: questionId) {
+                insertToQuiz(quizId, qusId);
             }
             isSuccessful = true;
         } catch (Exception e) {
@@ -165,14 +163,14 @@ public class QuizDaoImpl implements QuizDao {
         return isSuccessful;
     }
 
-    private void insertToQuiz(Long quizId, Question question) {
+    private void insertToQuiz(Long quizId, Long questionId) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
             entityManager.createNativeQuery("insert into quizes_questions values(:quizId, :questionId)")
                     .setParameter("quizId", quizId)
-                    .setParameter("questionId", question.getId())
+                    .setParameter("questionId", questionId)
                     .executeUpdate();
             transaction.commit();
         } catch (Exception e) {

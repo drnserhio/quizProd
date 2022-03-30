@@ -1,6 +1,9 @@
 package com.quiz.quizprod.service.impl;
 
 import com.quiz.quizprod.dao.QuizDao;
+import com.quiz.quizprod.exception.AnswerUserFoundException;
+import com.quiz.quizprod.exception.QuizExistsException;
+import com.quiz.quizprod.model.impl.Question;
 import com.quiz.quizprod.model.impl.Quiz;
 import com.quiz.quizprod.service.QuizService;
 import com.quiz.quizprod.table.RequestTable;
@@ -46,5 +49,11 @@ public class QuizServiceImpl implements QuizService {
     @Override
     public boolean deleteById(Long id) throws Exception {
         return quizDao.deleteById(id);
+    }
+
+    @Override
+    public boolean creatQuizWithQuestion(Long quizId, Long... questionId)
+            throws QuizExistsException, AnswerUserFoundException {
+        return quizDao.creatQuizWithQuestion(quizId, questionId);
     }
 }

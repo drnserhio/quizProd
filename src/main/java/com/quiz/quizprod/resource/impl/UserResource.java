@@ -84,27 +84,21 @@ public class UserResource implements DefaultResource<User> {
         return userService.getFreeQuizByUserId(userId);
     }
 
-    @GetMapping("/select/quiz/by/{quizId}")
-    public Quiz onSelectQuiz(
-            @PathVariable("quizId") Long quizId) {
-        return userService.onSelectQuiz(quizId);
-    }
-
-    @PostMapping("/answer_question")
+    @PostMapping("/answer_question/{quizId}/{username}/{answer}")
     public boolean answerTheQuestion(
-            @RequestParam("quizId") Long quizId,
-            @RequestParam("username") String username,
-            @RequestParam("answer") String answer,
-            @RequestParam("question") Question question)
+            @PathVariable("quizId") String quizId,
+            @PathVariable("username") String username,
+            @PathVariable("answer") String answer,
+            @RequestBody Question question)
             throws QuizExistsException {
         return userService.answerTheQuestion(quizId, username, answer, question);
     }
 
-    @GetMapping("/save_test")
-    public void insertQuizToUserAfterTest(
-            @RequestParam("quizId") Long quizId,
-            @RequestParam("userId") Long userId) {
-        userService.insertQuizToUserAfterTest(quizId, userId);
+    @GetMapping("/save_test/{quizId}/{userId}")
+    public boolean insertQuizToUserAfterTest(
+            @PathVariable("quizId") Long quizId,
+            @PathVariable("userId") Long userId) {
+       return userService.insertQuizToUserAfterTest(quizId, userId);
     }
 
     @PostMapping("/register")

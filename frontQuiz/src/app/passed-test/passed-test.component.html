@@ -62,15 +62,13 @@
       <thead>
       <tr>
         <th scope="col">Quiz theme</th>
-        <th scope="col">Count question</th>
         <th scope="col">Notice</th>
       </tr>
       </thead>
-      <tbody *ngFor="let quiz of profileQuiz" style="cursor: pointer;">
+      <tbody *ngFor="let quiz of selectCurrentUserQuizes" style="cursor: pointer;">
       <tr>
-        <td (click)="open(content)" (click)="onSelectModalQuiz(quiz.id!)" scope="row">{{quiz.name}}</td>
-        <td (click)="open(content)"(click)="onSelectModalQuiz(quiz.id!)">{{quiz?.questions?.length}}</td>
-        <td (click)="open(content)" (click)="onSelectModalQuiz(quiz.id!)">{{quiz.notice}}</td>
+        <td (click)="onShowTest(quiz.id,passed)" scope="row">{{quiz.name}}</td>
+        <td (click)="onShowTest(quiz.id, passed)">{{quiz.notice}}</td>
       </tr>
 
       </tbody>
@@ -83,34 +81,40 @@
 </body>
 </html>
 
-<ng-template #content let-modal>
+<ng-template #passed let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Test Quiz Theme: {{selectQuiz?.name}}</h4>
+    <h4 class="modal-title" id="modal-basic-title">Test Passed : </h4>
   </div>
   <div class="modal-body">
-    <section>
-      <div class="mb-3">
-        <h5>{{currentQuestion?.question}}</h5>
-        <div class="form-check" >
-          <input class="form-check-input" type="radio" (click)="onSelectAnswerSave(currentQuestion?.answer!)" name="flexRadioDefault" id="flexRadioDefault1">{{currentQuestion?.answer}}
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" (click)="onSelectAnswerSave(currentQuestion?.badFirstAnswer!)" name="flexRadioDefault" id="flexRadioDefault2">{{currentQuestion?.badFirstAnswer}}
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" (click)="onSelectAnswerSave(currentQuestion?.badSecondAnswer!)" name="flexRadioDefault" id="flexRadioDefault3">{{currentQuestion?.badSecondAnswer}}
+    <table class="table table-hover justify-content-center">
+      <thead>
+      <tr>
+        <th scope="col">Question</th>
+        <th scope="col">Your answer</th>
+        <th scope="col">Successful answer</th>
+        <th scope="col">Is Correct</th>
+        <th scope="col">Code test userId</th>
+        <th scope="col">Username test</th>
+      </tr>
+      </thead>
+      <tbody *ngFor="let answer of answerByQuizTest" style="cursor: pointer;">
+      <tr>
+        <td scope="row">{{answer.question}}</td>
+        <td> {{answer.answerUser}}</td>
+        <td>{{answer.answerSuccessful}}</td>
+        <td>
+          <span class="text-success" [hidden]="answer?.isSuccessfulAnswer === false">
+            <i class="fas fa-check-circle"></i>
+          </span>
+        </td>
+        <td>{{answer.idCode}}</td>
+        <td>{{answer.usernameActive}}</td>
+      </tr>
+      </tbody>
+    </table>
 
-        </div>
-
-        <div class="justify-content-center text-center">
-          <button type="button" class="btn btn-outline-dark align-content-center" (click)="onNextQuestion()">Next question</button>
-        </div>
-
-
-      </div>
-    </section>
   </div>
-  <div class="modal-footer">
-    <button type="button" id="close" class="btn btn-outline-dark" (click)="modal.close('Save click')">Close</button>
-  </div>
+
 </ng-template>
+
+

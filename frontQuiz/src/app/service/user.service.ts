@@ -52,21 +52,13 @@ export class UserService {
     return this.http.get<Quiz[]>(`${this.api}/get/free_quiz/by/${userId}`)
   }
 
-  public onSelectQuiz(quizId: number): Observable<Quiz> {
-    return this.http.get<Quiz>(`${this.api}/select/quiz/by/${quizId}`);
+  public answerTheQuestion(quizId: string, username: string, answer: string, question: Question): Observable<boolean> {
+    return this.http.post<boolean>(`${this.api}/answer_question/${quizId}/${username}/${answer}`, question);
   }
 
-  public answerTheQuestion(formData: FormData): Observable<boolean> {
-    return this.http.post<boolean>(`${this.api}/answer_question`, formData);
-  }
+  public insertQuizToUserAfterTest(quizId: number, userId: number): Observable<boolean> {
+  return this.http.get<boolean>(`${this.api}/save_test/${quizId}/${userId}`);
+}
 
-  public createFormDraForAnswerQuestion(quizId: number, username: string, answer: string, question: Question) {
-    const formData = new FormData();
-    formData.append("quizId", JSON.stringify(quizId));
-    formData.append("username", username);
-    formData.append("answer", answer);
-    formData.append("question", JSON.stringify(question));
-    return formData;
-  }
 
 }

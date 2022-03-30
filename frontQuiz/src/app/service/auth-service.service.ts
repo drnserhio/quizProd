@@ -40,10 +40,13 @@ export class AuthService {
     localStorage.setItem('userName', userName);
   }
 
-  public setUserToLocalCache(user: User): void {
-    localStorage.removeItem('user')
-    localStorage.setItem('user', JSON.stringify(user));
+  public saveCurrentUserId(userId: number): void {
+   localStorage.setItem('currentId', JSON.stringify(userId));
 }
+
+  public getCurrentUserId(): string {
+    return localStorage.getItem('currentId')!;
+  }
 
   public getUsernameFromLocalCache(): string {
     return localStorage.getItem('userName')!;

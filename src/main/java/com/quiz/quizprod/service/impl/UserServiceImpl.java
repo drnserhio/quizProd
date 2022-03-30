@@ -12,7 +12,6 @@ import com.quiz.quizprod.model.principal.CustomUserPrincipal;
 import com.quiz.quizprod.service.UserService;
 import com.quiz.quizprod.table.RequestTable;
 import com.quiz.quizprod.table.ResponseTable;
-import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -69,18 +68,13 @@ public record UserServiceImpl(UserDao userDao) implements UserService {
     }
 
     @Override
-    public Quiz onSelectQuiz(Long quizId) {
-        return userDao.onSelectQuiz(quizId);
-    }
-
-    @Override
-    public boolean answerTheQuestion(Long quizId, String username, String answer, Question question) throws QuizExistsException {
+    public boolean answerTheQuestion(String quizId, String username, String answer, Question question) throws QuizExistsException {
         return userDao.answerTheQuestion(quizId, username, answer, question);
     }
 
     @Override
-    public void insertQuizToUserAfterTest(Long quizId, Long userId) {
-        userDao.insertQuizToUserAfterTest(quizId, userId);
+    public boolean insertQuizToUserAfterTest(Long quizId, Long userId) {
+      return userDao.insertQuizToUserAfterTest(quizId, userId);
     }
 
 

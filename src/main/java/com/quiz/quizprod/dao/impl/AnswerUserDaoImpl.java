@@ -126,4 +126,20 @@ public class AnswerUserDaoImpl implements AnswerUserDao {
                 .setHint(QueryHints.HINT_READONLY, true)
                 .getFirstResult() == 1;
     }
+
+    @Override
+    public List<AnswerUser> getAllPassedTestByQuizId(String quizId, String username) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        List<AnswerUser> answers = new ArrayList<>();
+        try {
+           answers = entityManager.createNativeQuery("select id, answer_successful, answer_user, date_end, date_start, id_code, is_successful_answer, question, quiz_id, username_active from answers_users where quiz_id =:quizId and username_active =:activeUsername", AnswerUser.class)
+                    .setParameter("quizId", quizId)
+                    .setParameter("activeUsername", username)
+                    .getResultList();
+        } catch (Exception e) {
+            entityManager.close();
+            e.printStackTrace();
+        }
+        return answers;
+    }
 }

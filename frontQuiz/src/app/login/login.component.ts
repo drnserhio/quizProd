@@ -1,10 +1,12 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../service/auth-service.service";
 import {User} from "../model/user";
-import { Subscription } from 'rxjs';
+import {Subscription} from 'rxjs';
 import {Router} from "@angular/router";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 import {HeaderType} from "../model/header-type";
+import {NotifyService} from "../service/notify-service.service";
+import {NotifyType} from "../model/notify-type.enum";
 
 @Component({
   selector: 'app-login',
@@ -18,9 +20,15 @@ export class LoginComponent implements OnInit {
 
 
   constructor(private authService: AuthService,
-              private router: Router) { }
+              private router: Router,
+              private notify: NotifyService) { }
 
   ngOnInit(): void {
+    if (this.authService.isUserLoggedIn()) {
+      this.router.navigateByUrl('/profile');
+    } else {
+      this.router.navigateByUrl('/login');
+    }
   }
 
   public signIn(user: User): void {
@@ -33,11 +41,13 @@ export class LoginComponent implements OnInit {
           const token = response.headers.get(HeaderType.JWT_TOKEN);
           this.authService.saveToken(token!);
           this.authService.saveUsernameToLocalCahe(response.body?.username!);
+          this.authService.saveCurrentUserId(response.body?.id!);
           this.router.navigateByUrl('/profile');
           this.loadingIcon = false;
         },
         (errorResponse: HttpErrorResponse) => {
           this.loadingIcon = false;
+          this.notify.sendNotify(NotifyType.ERROR, errorResponse.error.message);
           console.log(errorResponse);
         }
       )

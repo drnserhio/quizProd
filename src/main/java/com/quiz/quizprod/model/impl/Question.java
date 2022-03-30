@@ -15,5 +15,6 @@ import javax.persistence.Table;
 public class Question extends DefaultEntity {
     private String question;
     private String answer;
-    private String qustionType;
+    private String badFirstAnswer;
+    private String badSecondAnswer;
 }

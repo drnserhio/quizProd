@@ -4,6 +4,7 @@ import com.quiz.quizprod.exception.PasswordInvalidException;
 import com.quiz.quizprod.exception.QuizExistsException;
 import com.quiz.quizprod.exception.UserExistsException;
 import com.quiz.quizprod.exception.UsernameExistsException;
+import com.quiz.quizprod.model.impl.AnswerUser;
 import com.quiz.quizprod.model.impl.Question;
 import com.quiz.quizprod.model.impl.Quiz;
 import com.quiz.quizprod.model.impl.User;
@@ -17,11 +18,10 @@ public interface UserDao extends BaseDao<User>{
 
     List<Quiz> getFreeQuizByUserId(Long userId);
 
-    Quiz onSelectQuiz(Long quizId);
+    boolean answerTheQuestion(String quizId, String username, String answer, Question question) throws QuizExistsException;
 
-    boolean answerTheQuestion(Long quizId, String username, String answer, Question question) throws QuizExistsException;
+    boolean insertQuizToUserAfterTest(Long quizId, Long userId);
 
-    void insertQuizToUserAfterTest(Long quizId, Long userId);
 }
 
 

@@ -1,6 +1,9 @@
 package com.quiz.quizprod.resource.impl;
 
+import com.quiz.quizprod.exception.AnswerUserFoundException;
 import com.quiz.quizprod.exception.QuizExistsException;
+import com.quiz.quizprod.model.impl.BodyId;
+import com.quiz.quizprod.model.impl.Question;
 import com.quiz.quizprod.model.impl.Quiz;
 import com.quiz.quizprod.resource.DefaultResource;
 import com.quiz.quizprod.service.QuizService;
@@ -54,5 +57,13 @@ public record QuizResource(QuizService quizService) implements DefaultResource<Q
     public boolean deleteById(
             @PathVariable Long id) throws Exception {
         return quizService.deleteById(id);
+    }
+
+    @PostMapping("/save_question_to_quiz/{quizId}")
+    public boolean creatQuizWithQuestion(
+            @PathVariable Long quizId,
+            @RequestBody BodyId ids)
+            throws QuizExistsException, AnswerUserFoundException {
+        return quizService.creatQuizWithQuestion(quizId, ids.getIds());
     }
 }

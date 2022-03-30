@@ -10,7 +10,7 @@ import java.util.List;
 public interface QuizDao extends BaseDao<Quiz> {
 
 
-    boolean creatQuizWithQuestion(Long quizId, Question...question) throws AnswerUserFoundException, QuizExistsException;
+    boolean creatQuizWithQuestion(Long quizId, Long...questionId) throws AnswerUserFoundException, QuizExistsException;
     boolean deleteFromQuiz(Long quizId, Long...id) throws QuizExistsException;
 
 

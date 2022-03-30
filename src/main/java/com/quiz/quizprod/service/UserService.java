@@ -16,11 +16,11 @@ public interface UserService extends BaseService<User>, UserDetailsService {
     User registerAccount(User user) throws UserExistsException, PasswordInvalidException, UsernameExistsException;
     User getUserByUsername(String username);
 
+
+
     List<Quiz> getFreeQuizByUserId(Long userId);
 
-    Quiz onSelectQuiz(Long quizId);
+    boolean answerTheQuestion(String quizId, String username, String answer, Question question) throws QuizExistsException;
 
-    boolean answerTheQuestion(Long quizId, String username, String answer, Question question) throws QuizExistsException;
-
-    void insertQuizToUserAfterTest(Long quizId, Long userId);
+    boolean insertQuizToUserAfterTest(Long quizId, Long userId);
 }

@@ -17,6 +17,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -25,7 +26,8 @@ public class UserDaoImpl implements UserDao {
     private final EntityManagerFactory entityManagerFactory;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserDaoImpl(EntityManagerFactory entityManagerFactory, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserDaoImpl(EntityManagerFactory entityManagerFactory,
+                       BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.entityManagerFactory = entityManagerFactory;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
@@ -57,15 +59,12 @@ public class UserDaoImpl implements UserDao {
         User user = null;
         try {
            user = (User) entityManager.createQuery("select usr from User usr where usr.username =:username")
-                    .setHint(QueryHints.HINT_READONLY, true)
                     .setParameter("username", username)
                     .getResultList()
                     .get(0);
         } catch (Exception e) {
             entityManager.close();
             e.printStackTrace();
-        } finally {
-            entityManager.close();
         }
         return user;
     }
@@ -111,7 +110,6 @@ public class UserDaoImpl implements UserDao {
         User user = null;
         try {
             user = (User) entityManager.createQuery("select usr from User usr where usr.id =:id")
-                    .setHint(QueryHints.HINT_READONLY, true)
                     .setParameter("id", id)
                     .getResultList()
                     .get(0);
@@ -169,10 +167,16 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean existsById(Long id) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        return entityManager.createQuery("select count(id) from User where id =: id")
-                .setParameter("id", id)
-                .setHint(QueryHints.HINT_READONLY, true)
-                .getFirstResult() == 1;
+        boolean isDelete = false;
+        try {
+          isDelete = entityManager.createQuery("select count(id) from User where id =: id")
+                    .setParameter("id", id)
+                    .getFirstResult() == 1;
+        } catch (Exception e) {
+            entityManager.close();
+            e.printStackTrace();
+        }
+        return isDelete;
     }
 
     @Override
@@ -183,40 +187,22 @@ public class UserDaoImpl implements UserDao {
             quizzes = entityManager
                     .createNativeQuery("select id, name, notice from quizes where id not in (select quizzes_id from users_quizzes where user_id =:userId)", Quiz.class)
                     .setParameter("userId", userId)
-                    .setHint(QueryHints.HINT_READONLY, true)
                     .getResultList();
         } catch (Exception e) {
             entityManager.close();
             e.printStackTrace();
-        } finally {
-            entityManager.close();
         }
         return quizzes;
     }
 
     @Override
-    public Quiz onSelectQuiz(Long quizId) {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        Quiz quiz = null;
-        try {
-            quiz = (Quiz) entityManager.createQuery("select quiz from Quiz quiz where quiz.id =:id")
-                    .setHint(QueryHints.HINT_READONLY, true)
-                    .getResultList().get(0);
-        } catch (Exception e) {
-            entityManager.close();
-            e.printStackTrace();
-        }
-        return quiz;
-    }
-
-    @Override
-    public boolean answerTheQuestion(Long quizId, String username, String answer, Question question)
+    public boolean answerTheQuestion(String quizId, String username, String answer, Question question)
             throws QuizExistsException {
-        Quiz quiz = getQuizById(quizId);
+        Quiz quiz = getQuizById(Long.valueOf(quizId));
         if (quiz == null) {
             throw new QuizExistsException("Quiz not found");
         }
-        return createAnswer(question.getQuestion(), answer, question.getAnswer(), quizId, username);
+        return createAnswer(question.getQuestion(), answer, question.getAnswer(), Long.valueOf(quizId), username);
     }
 
     private boolean createAnswer(String question, String answer, String successAnswer, Long quizId, String username) {
@@ -229,6 +215,7 @@ public class UserDaoImpl implements UserDao {
         answerUser.setUsernameActive(username);
         answerUser.setQuizId(quizId);
         answerUser.setIdCode(username + quizId);
+        answerUser.setDateStart(new Date());
         if (successAnswer.equals(answer)) {
             answerUser.setSuccessfulAnswer(true);
             isSuccessAnswer = true;
@@ -259,7 +246,6 @@ public class UserDaoImpl implements UserDao {
         Quiz quiz = null;
         try {
             quiz = (Quiz) entityManager.createQuery("select qiz from Quiz qiz where qiz.id =:quizId")
-                    .setHint(QueryHints.HINT_READONLY, true)
                     .setParameter("quizId", quizId)
                     .getResultList()
                     .get(0);
@@ -271,9 +257,10 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void insertQuizToUserAfterTest(Long quizId, Long userId) {
+    public boolean insertQuizToUserAfterTest(Long quizId, Long userId) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
+        boolean isSave = false;
         try {
             transaction.begin();
             entityManager.createNativeQuery("insert into users_quizzes values (:userId, :quizId)")
@@ -281,13 +268,17 @@ public class UserDaoImpl implements UserDao {
                     .setParameter("quizId", quizId)
                     .executeUpdate();
             transaction.commit();
+            isSave = true;
         } catch (Exception e) {
             transaction.rollback();
             e.printStackTrace();
         } finally {
             entityManager.close();
         }
+        return isSave;
     }
+
+
 
 
 }

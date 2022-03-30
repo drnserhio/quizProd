@@ -18,8 +18,8 @@ export class ProfileComponent implements OnInit {
               private userService: UserService) { }
 
   ngOnInit(): void {
-
     this.getProfile();
+
   }
 
   private getProfile() {
@@ -28,7 +28,9 @@ export class ProfileComponent implements OnInit {
       (response: User) => {
         console.log(response);
         this.profile = response;
-        this.getFreeQuiz();
+        if (this.profile) {
+          this.getFreeQuiz();
+        }
       },
       (error: HttpErrorResponse) => {
         alert(error.error.message);

@@ -1,9 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {UserService} from "../service/user.service";
 import {Quiz} from "../model/quiz";
 import {HttpErrorResponse} from "@angular/common/http";
 import {AuthService} from "../service/auth-service.service";
-import {User} from "../model/user";
+import {ModalDismissReasons, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {QuizService} from "../service/quiz.service";
+import {Question} from "../model/question";
+import {NotifyService} from "../service/notify-service.service";
+import {NotifyType} from "../model/notify-type.enum";
 
 @Component({
   selector: 'app-list-quiz',
@@ -12,32 +16,32 @@ import {User} from "../model/user";
 })
 export class ListQuizComponent implements OnInit {
 
-   profileQuiz?: Quiz[];
+  profileQuiz?: Quiz[];
+  selectQuiz?: Quiz;
+  closeResult = '';
+  selectQuizQuestion?: Question[];
+  currentQuestion?: Question;
+
+  countOfQuestion = 0;
+  flagEndTest = true;
+  private answerSave?: string;
 
   constructor(private userService: UserService,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              private modalService: NgbModal,
+              private quizService: QuizService,
+              private notify: NotifyService) { }
 
   currentUserId!: number;
 
   ngOnInit(): void {
-    this.getCurrentUserId();
+    this.getFreeQuiz();
   }
 
-  private getCurrentUserId() {
-    const username = this.authService.getUsernameFromLocalCache();
-    this.userService.getUserByUsername(username).subscribe(
-      (response: User) => {
-        this.currentUserId = response?.id;
-        this.getFreeQuiz();
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.error.message);
-      }
-    )
-  }
 
   private getFreeQuiz() {
-    this.userService.getFreeQuizByUserId(this.currentUserId!).subscribe(
+    let userId = parseInt(this.authService.getCurrentUserId());
+    this.userService.getFreeQuizByUserId(userId).subscribe(
       (response: Quiz[]) => {
         this.profileQuiz = response;
         console.log(response);
@@ -48,4 +52,97 @@ export class ListQuizComponent implements OnInit {
     )
   }
 
+  onSelectModalQuiz(quizId: number) {
+    console.log(quizId);
+   this.quizService.findById(quizId).subscribe(
+      (response: Quiz) => {
+        this.selectQuiz = response;
+        this.selectQuizQuestion = response.questions;
+        this.currentQuestion = this.selectQuizQuestion![this.countOfQuestion];
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error.error.message);
+      }
+    )
+  }
+
+  saveChangeTest() {
+    //TODO: add to user quiz
+    const userId = parseInt(this.authService.getCurrentUserId());
+    this.userService.insertQuizToUserAfterTest(this.selectQuiz?.id!, userId).subscribe(
+      (response: boolean) => {
+        this.resetTestField();
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error.error.message);
+      }
+    );
+  }
+
+  onDeleteIfClose() {
+    //TODO: delete all answer and that's all
+  }
+
+  onNextQuestion() {
+    if (this.selectQuiz?.questions.length!-1 > this.countOfQuestion) {
+      console.log(this.selectQuiz?.questions.length)
+      console.log(this.countOfQuestion)
+      this.onCreateAnswerTheQuestion(this.answerSave!, this.currentQuestion!);
+      this.currentQuestion = this.selectQuizQuestion![++this.countOfQuestion];
+      return;
+    }
+    if (this.selectQuiz?.questions.length!-1 == this.countOfQuestion) {
+      console.log(this.selectQuiz?.questions.length)
+      console.log(this.countOfQuestion)
+      this.onCreateAnswerTheQuestion(this.answerSave!, this.currentQuestion!);
+      this.saveChangeTest();
+    }
+  }
+
+  onCreateAnswerTheQuestion(answer: string, currentQuestion: Question) {
+    //TODO: create answer and save to database
+    let username = this.authService.getUsernameFromLocalCache();
+    let quizId = JSON.stringify(this.selectQuiz?.id!);
+    this.userService.answerTheQuestion(quizId, username, answer, currentQuestion).subscribe(
+      (response: boolean) => {
+        this.notify.sendNotify(NotifyType.SUCCESS, 'Test passed');
+      },
+      (error: HttpErrorResponse) => {
+        this.notify.sendNotify(NotifyType.WARNING, 'Test failed save');
+      }
+    )
+  }
+
+
+  open(content: any) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
+
+  private resetTestField() {
+    this.flagEndTest = true;
+    this.countOfQuestion = 0;
+    document.getElementById('close')?.click();
+    this.selectQuiz = null!;
+    this.selectQuizQuestion = null!;
+    this.getFreeQuiz();
+  }
+
+  onSelectAnswerSave(answerSave: string) {
+    this.answerSave = answerSave;
+    console.log(answerSave);
+  }
 }

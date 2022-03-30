@@ -12,39 +12,44 @@ import java.util.List;
 @Service
 public class AnwerUserServiceImpl implements AnwerUserService {
 
-    private final AnswerUserDao roomQuizDao;
+    private final AnswerUserDao answersDao;
 
-    public AnwerUserServiceImpl(AnswerUserDao roomQuizDao) {
-        this.roomQuizDao = roomQuizDao;
+    public AnwerUserServiceImpl(AnswerUserDao answersDao) {
+        this.answersDao = answersDao;
     }
 
     @Override
     public AnswerUser update(AnswerUser update) {
-        return roomQuizDao.update(update);
+        return answersDao.update(update);
     }
 
     @Override
     public AnswerUser save(AnswerUser save) throws Exception {
-        return roomQuizDao.save(save);
+        return answersDao.save(save);
     }
 
     @Override
     public AnswerUser findById(Long id) {
-        return roomQuizDao.findById(id);
+        return answersDao.findById(id);
     }
 
     @Override
     public List<AnswerUser> findAll() {
-        return roomQuizDao.findAll();
+        return answersDao.findAll();
     }
 
     @Override
     public ResponseTable<AnswerUser> findAll(RequestTable requestTable) {
-        return roomQuizDao.findAll(requestTable);
+        return answersDao.findAll(requestTable);
     }
 
     @Override
     public boolean deleteById(Long id) throws Exception {
-        return roomQuizDao.deleteById(id);
+        return answersDao.deleteById(id);
+    }
+
+    @Override
+    public List<AnswerUser> getAllPassedTestByQuizId(String quizId, String username) {
+        return answersDao.getAllPassedTestByQuizId(quizId, username);
     }
 }
