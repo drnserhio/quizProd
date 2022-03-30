@@ -217,10 +217,10 @@ public class UserDaoImpl implements UserDao {
         answerUser.setIdCode(username + quizId);
         answerUser.setDateStart(new Date());
         if (successAnswer.equals(answer)) {
-            answerUser.setSuccessfulAnswer(true);
+            answerUser.setIsSuccessfulAnswer(true);
             isSuccessAnswer = true;
         } else {
-            answerUser.setSuccessfulAnswer(false);
+            answerUser.setIsSuccessfulAnswer(false);
         }
         saveAnswer(answerUser);
         return isSuccessAnswer;

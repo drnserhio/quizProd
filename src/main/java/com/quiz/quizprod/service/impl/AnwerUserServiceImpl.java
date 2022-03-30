@@ -10,13 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class AnwerUserServiceImpl implements AnwerUserService {
-
-    private final AnswerUserDao answersDao;
-
-    public AnwerUserServiceImpl(AnswerUserDao answersDao) {
-        this.answersDao = answersDao;
-    }
+public record AnwerUserServiceImpl(AnswerUserDao answersDao) implements AnwerUserService {
 
     @Override
     public AnswerUser update(AnswerUser update) {
@@ -52,4 +46,11 @@ public class AnwerUserServiceImpl implements AnwerUserService {
     public List<AnswerUser> getAllPassedTestByQuizId(String quizId, String username) {
         return answersDao.getAllPassedTestByQuizId(quizId, username);
     }
+
+    @Override
+    public boolean deleteAllAnswersIfCloseTest(String quizId, String username) {
+        return answersDao.deleteAllAnswersIfCloseTest(quizId, username);
+    }
+
+
 }

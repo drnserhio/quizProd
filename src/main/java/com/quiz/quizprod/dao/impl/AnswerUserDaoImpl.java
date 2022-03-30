@@ -142,4 +142,26 @@ public class AnswerUserDaoImpl implements AnswerUserDao {
         }
         return answers;
     }
+
+    @Override
+    public boolean deleteAllAnswersIfCloseTest(String quizId, String username) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        boolean isDelete = false;
+        try {
+            transaction.begin();
+            entityManager.createNativeQuery("delete from answers_users where quiz_id =:quizId and username_active =:username")
+                    .setParameter("quizId", quizId)
+                    .setParameter("username", username)
+                    .executeUpdate();
+            transaction.commit();
+            isDelete = true;
+        } catch (Exception e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+        return isDelete;
+    }
 }

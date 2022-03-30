@@ -8,4 +8,5 @@ import java.util.List;
 public interface AnswerUserDao extends BaseDao<AnswerUser>  {
 
     List<AnswerUser> getAllPassedTestByQuizId(String quizId, String username);
+    boolean deleteAllAnswersIfCloseTest(String quizId, String username);
 }

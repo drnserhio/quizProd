@@ -12,11 +12,12 @@ import { ListQuizComponent } from './list-quiz/list-quiz.component';
 import {AuthService} from "./service/auth-service.service";
 import {UserService} from "./service/user.service";
 import {AuthInterceptor} from "./interceptor/auth-interceptor";
-import {NotifierService} from "angular-notifier";
+import {NotifierModule, NotifierService} from "angular-notifier";
 import {AuthGuard} from "./guard/auth-guard.guard";
 import {NotificationModule} from "./notification.module";
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {NgbActiveModal, NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import { PassedTestComponent } from './passed-test/passed-test.component';
+import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 
 
 @NgModule({
@@ -27,16 +28,17 @@ import { PassedTestComponent } from './passed-test/passed-test.component';
     ProfileComponent,
     ListQuizComponent,
     PassedTestComponent,
+    AdminDashboardComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    NotificationModule,
-    NgbModule
+    NotifierModule,
+    NgbModule,
   ],
-  providers: [AuthService, UserService, NotifierService, AuthGuard,
+  providers: [AuthService, UserService, NotifierService, AuthGuard, NgbActiveModal,
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]

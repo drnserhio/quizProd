@@ -7,4 +7,6 @@ import java.util.List;
 public interface AnwerUserService extends BaseService<AnswerUser> {
 
     List<AnswerUser> getAllPassedTestByQuizId(String quizId, String username);
+
+    boolean deleteAllAnswersIfCloseTest(String quizId, String username);
 }

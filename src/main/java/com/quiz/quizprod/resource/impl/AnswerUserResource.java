@@ -56,4 +56,11 @@ public record AnswerUserResource(
             @RequestParam("username") String username) {
         return anwerUserService.getAllPassedTestByQuizId(quizId, username);
     }
+
+    @PostMapping("/delete_by_close_test")
+    public boolean deleteAllAnswersIfCloseTest(
+            @RequestParam String quizId,
+            @RequestParam String username) {
+        return anwerUserService.deleteAllAnswersIfCloseTest(quizId, username);
+    }
 }

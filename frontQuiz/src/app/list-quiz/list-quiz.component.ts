@@ -8,6 +8,8 @@ import {QuizService} from "../service/quiz.service";
 import {Question} from "../model/question";
 import {NotifyService} from "../service/notify-service.service";
 import {NotifyType} from "../model/notify-type.enum";
+import {AnswersService} from "../service/answers.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-list-quiz',
@@ -30,6 +32,8 @@ export class ListQuizComponent implements OnInit {
               private authService: AuthService,
               private modalService: NgbModal,
               private quizService: QuizService,
+              private answerService: AnswersService,
+              private router: Router,
               private notify: NotifyService) { }
 
   currentUserId!: number;
@@ -43,6 +47,10 @@ export class ListQuizComponent implements OnInit {
     let userId = parseInt(this.authService.getCurrentUserId());
     this.userService.getFreeQuizByUserId(userId).subscribe(
       (response: Quiz[]) => {
+        if (response.length <= 0 ) {
+          this.notify.sendNotify(NotifyType.ERROR, "");
+          this.router.navigateByUrl("/profile")
+        }
         this.profileQuiz = response;
         console.log(response);
       },
@@ -80,7 +88,21 @@ export class ListQuizComponent implements OnInit {
   }
 
   onDeleteIfClose() {
-    //TODO: delete all answer and that's all
+    let username = this.authService.getUsernameFromLocalCache();
+    let qizId = JSON.stringify(this.selectQuiz?.id!);
+    let formData = this.answerService.createFormDataForCloseTest(qizId, username);
+    console.log(qizId);
+    console.log(username);
+    this.answerService.deleteAllAnswersIfCloseTest(formData).subscribe(
+      (resposne: boolean) => {
+       this.countOfQuestion = 0;
+          this.modalService.dismissAll();
+      },
+      (error: HttpErrorResponse) => {
+        this.notify.sendNotify(NotifyType.ERROR, error.error.message);
+      }
+    )
+
   }
 
   onNextQuestion() {
@@ -133,9 +155,8 @@ export class ListQuizComponent implements OnInit {
   }
 
   private resetTestField() {
-    this.flagEndTest = true;
     this.countOfQuestion = 0;
-    document.getElementById('close')?.click();
+    this.modalService.dismissAll();
     this.selectQuiz = null!;
     this.selectQuizQuestion = null!;
     this.getFreeQuiz();
@@ -145,4 +166,5 @@ export class ListQuizComponent implements OnInit {
     this.answerSave = answerSave;
     console.log(answerSave);
   }
+
 }

@@ -19,10 +19,21 @@ export class AnswersService {
     return this.http.post<Answers[]>(`${this.api}/get_passed_test`, formData)
   }
 
-  public createFormDataForAnswerTheQuestion(quizId: string,username: string) {
+  public createFormDataForAnswerTheQuestion(quizId: string, username: string) {
     const formData = new FormData();
     formData.append("quizId", quizId)
     formData.append("username", username)
+    return formData;
+  }
+
+  public deleteAllAnswersIfCloseTest(formData: FormData): Observable<boolean> {
+    return this.http.post<boolean>(`${this.api}/delete_by_close_test`, formData);
+  }
+
+  public createFormDataForCloseTest(quizId: string, username: string) {
+    const formData = new FormData();
+    formData.append('quizId', quizId);
+    formData.append('username', username);
     return formData;
   }
 }

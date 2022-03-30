@@ -21,7 +21,7 @@ public class AnswerUser extends DefaultEntity {
     private String answerSuccessful;
     private String usernameActive;
     private String idCode;
-    private boolean isSuccessfulAnswer;
+    private Boolean isSuccessfulAnswer;
 
     private Date dateStart;
     private Date dateEnd;
