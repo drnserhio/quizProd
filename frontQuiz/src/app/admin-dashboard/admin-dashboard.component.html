@@ -12,44 +12,36 @@
 <div class="wrapper d-flex align-items-stretch">
   <nav id="sidebar">
     <div class="p-4">
-      <h1><a href="index.html" class="logo">Profile <span> Portfolio Agency</span></a></h1>
+      <h1><a href="index.html" class="logo">Dashboard <span> Admin Dashboard</span></a></h1>
       <ul class="list-unstyled components mb-5">
         <li class="active">
           <a routerLink="/profile"><span class="fa fa-home mr-3"></span>Home</a>
         </li>
         <li>
-          <a routerLink="/list_quiz"><span class="fa fa-user mr-3"></span> Show Quiz</a>
+          <a routerLink="/create_quiz"><span class="fa fa-sticky-note mr-3" ></span> Create Quiz</a>
         </li>
         <li>
-          <a routerLink="/passed_tests"><span class="fa fa-briefcase mr-3"></span>Passed Test</a>
+          <a routerLink="/create_question"><span class="fa fa-sticky-note mr-3"></span> Create Question</a>
         </li>
         <li>
-          <a href="#"><span class="fa fa-sticky-note mr-3"></span> Create Quiz</a>
+          <a routerLink="/list_question"><span class="fa fa-sticky-note mr-3"></span> List question</a>
         </li>
         <li>
-          <a href="#"><span class="fa fa-sticky-note mr-3"></span> Create Question</a>
+          <a routerLink="/quiz_all_list"><span class="fa fa-sticky-note mr-3"></span> List quiz</a>
         </li>
         <li>
           <a routerLink="/admin_dashboard"><span class="fa fa-sticky-note mr-3"></span> Admin Dashboard</a>
         </li>
       </ul>
 
-      <div class="mb-5">
-
+      <div class="mb-5 text-white">
+        <h3 class="h6 mb-3">Search users</h3>
         <form action="#" class="subscribe-form">
-          <div class="form-g3roup d-flex">
+          <div class="form-g3roup d-flex ">
             <div class="icon"><span class="icon-paper-plane"></span></div>
-            <input type="text" class="form-control" placeholder="Search...">
+            <input class="form-control text-white" placeholder="search..."  name="searchTerm" #searchInput="ngModel" ngModel (ngModelChange)="searchUsers(searchInput.value)" type="search">
           </div>
         </form>
-      </div>
-
-      <div class="footer">
-        <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-          Copyright &copy;<script>document.write(new Date().getFullYear());</script>
-          All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a
-            href="https://colorlib.com" target="_blank">Colorlib.com</a>
-          <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
       </div>
 
     </div>

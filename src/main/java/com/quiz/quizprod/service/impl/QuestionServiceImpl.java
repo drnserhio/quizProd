@@ -47,4 +47,9 @@ public class QuestionServiceImpl implements QuestionService {
     public boolean deleteById(Long id) throws Exception {
         return questionDao.deleteById(id);
     }
+
+    @Override
+    public List<Question> getAllQuestionWithoutInQuiz(String quizId) {
+        return questionDao.getAllQuestionWithoutInQuiz(quizId);
+    }
 }

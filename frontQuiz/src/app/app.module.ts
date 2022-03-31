@@ -18,6 +18,10 @@ import {NotificationModule} from "./notification.module";
 import {NgbActiveModal, NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import { PassedTestComponent } from './passed-test/passed-test.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { CreateQuestionComponent } from './create-question/create-question.component';
+import { ListQuestionComponent } from './list-question/list-question.component';
+import { CreateQuizComponent } from './create-quiz/create-quiz.component';
+import { AllQuizInBaseComponent } from './all-quiz-in-base/all-quiz-in-base.component';
 
 
 @NgModule({
@@ -29,6 +33,10 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
     ListQuizComponent,
     PassedTestComponent,
     AdminDashboardComponent,
+    CreateQuestionComponent,
+    ListQuestionComponent,
+    CreateQuizComponent,
+    AllQuizInBaseComponent,
   ],
   imports: [
     BrowserModule,

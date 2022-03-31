@@ -14,9 +14,12 @@ import java.util.List;
 public interface UserDao extends BaseDao<User>{
 
     User registerAccount(User user) throws UserExistsException, PasswordInvalidException, UsernameExistsException;
+    User registerAccountAdmin(User user) throws UserExistsException, PasswordInvalidException, UsernameExistsException;
     User getUserByUsername(String username);
 
     List<Quiz> getFreeQuizByUserId(Long userId);
+
+    boolean isExistByUsername(String username);
 
     boolean answerTheQuestion(String quizId, String username, String answer, Question question) throws QuizExistsException;
 

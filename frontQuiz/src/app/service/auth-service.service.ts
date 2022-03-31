@@ -27,8 +27,10 @@ export class AuthService {
   public logOut(): void {
     this.token = null!;
     this.usernameLogeedIn = null!;
-    localStorage.removeItem('user');
+    localStorage.removeItem('userName');
     localStorage.removeItem('token');
+    localStorage.removeItem('currentId');
+
   }
 
   public saveToken(token: string): void {
@@ -43,6 +45,12 @@ export class AuthService {
   public saveCurrentUserId(userId: number): void {
    localStorage.setItem('currentId', JSON.stringify(userId));
 }
+  public saveRoleAccess(role: string): void {
+    localStorage.setItem('accessRole', role);
+  }
+  public getRoleAccess(): string {
+   return localStorage.getItem('accessRole')!;
+  }
 
   public getCurrentUserId(): string {
     return localStorage.getItem('currentId')!;

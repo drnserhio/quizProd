@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Sidebar 05</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<div class="wrapper d-flex align-items-stretch">
+  <nav id="sidebar">
+    <div class="p-4">
+      <h1><a href="index.html" class="logo">Quiz <span> Open quiz</span></a></h1>
+      <ul class="list-unstyled components mb-5">
+        <li class="active">
+          <a routerLink="/profile"><span class="fa fa-home mr-3"></span>Home</a>
+        </li>
+        <li>
+          <a routerLink="/create_quiz"><span class="fa fa-sticky-note mr-3" ></span> Create Quiz</a>
+        </li>
+        <li>
+          <a routerLink="/create_question"><span class="fa fa-sticky-note mr-3"></span> Create Question</a>
+        </li>
+        <li>
+          <a routerLink="/list_question"><span class="fa fa-sticky-note mr-3"></span> List question</a>
+        </li>
+        <li>
+          <a routerLink="/quiz_all_list"><span class="fa fa-sticky-note mr-3"></span> List quiz</a>
+        </li>
+        <li>
+          <a routerLink="/admin_dashboard"><span class="fa fa-sticky-note mr-3"></span> Admin Dashboard</a>
+        </li>
+      </ul>
+
+      <div class="mb-5 text-white">
+        <h3 class="h6 mb-3">Search quiz</h3>
+        <form action="#" class="subscribe-form">
+          <div class="form-g3roup d-flex ">
+            <div class="icon"><span class="icon-paper-plane"></span></div>
+            <input class="form-control text-white" placeholder="search..."  name="searchTerm" #searchInput="ngModel" ngModel (ngModelChange)="searchQuiz(searchInput.value)" type="search">
+          </div>
+        </form>
+      </div>
+
+
+    </div>
+  </nav>
+
+  <!-- Page Content  -->
+
+  <div id="content" class="container-fluid">
+
+
+    <table class="table table-hover justify-content-center">
+      <thead>
+      <tr>
+        <th scope="col">Quiz theme</th>
+        <th scope="col">Count question</th>
+        <th scope="col">Notice</th>
+      </tr>
+      </thead>
+      <tbody *ngFor="let quiz of quizes" style="cursor: pointer;">
+      <tr>
+        <td (click)="onSelectModalQuiz(quiz.id!, content)" scope="row">{{quiz.name}}</td>
+        <td (click)="onSelectModalQuiz(quiz.id!,content)">{{quiz?.questions?.length}}</td>
+        <td (click)="onSelectModalQuiz(quiz.id!,content)">{{quiz.notice}}</td>
+      </tr>
+
+      </tbody>
+    </table>
+
+
+  </div>
+</div>
+
+</body >
+</html >
+
+<ng-template #content let-modal >
+  <div class="modal-body">
+    <h4 class="modal-title" id="modal-basic-title">All question in quiz</h4>
+
+    <table class="table table-hover table-sm table-bordered justify-content-center">
+      <thead class="text-center" >
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">QUESTION</th>
+        <th scope="col">SUCCESS_ANSWER</th>
+        <th scope="col">BADLY_FIRST_ANSWER</th>
+        <th scope="col">BADLY_SECOND_ANSWER</th>
+      </tr>
+      </thead>
+      <tbody *ngFor="let quest of selectQuiz?.questions!" style="cursor: pointer;" class="text-center" >
+      <tr>
+        <td>{{quest.id}}</td>
+        <td scope="row">{{quest.question}}</td>
+        <td>{{quest.answer}}</td>
+        <td>{{quest.badFirstAnswer}}</td>
+        <td>{{quest.badSecondAnswer}}</td>
+      </tr>
+
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="add" class="btn btn-outline-dark" (click)="openQuizAndOpenModal(addQuiestionToQuiz)">Add question</button>
+    <button type="button" id="close" class="btn btn-outline-dark" (click)="modal.close()">Close</button>
+  </div>
+</ng-template>
+
+<ng-template #addQuiestionToQuiz let-modal >
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-titles">Add question to quiz</h4>
+  </div>
+  <div class="modal-body">
+    <table class="table table-hover table-sm table-bordered justify-content-center">
+      <thead class="text-center" >
+      <tr>
+        <th scope="col">QUESTION</th>
+        <th scope="col">SUCCESS_ANSWER</th>
+        <th>ADD_TO_QUIZ</th>
+      </tr>
+      </thead>
+      <tbody *ngFor="let question of freeQuestion!" style="cursor: pointer;" class="text-center" >
+      <tr>
+        <td scope="row">{{question.question}}</td>
+        <td>{{question.answer}}</td>
+        <td >
+          <div class="form-check">
+            <input class="form-check-input" (click)="addQuestionToArray(question.id)" type="checkbox" name="flexRadioDefault" id="flexRadioDefault3">
+          </div>
+        </td>
+      </tr>
+
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="close" class="btn btn-outline-dark" (click)="saveChanges()">Save</button>
+    <button type="button" id="close" class="btn btn-outline-dark" (click)="modal.close()">Close</button>
+  </div>
+</ng-template>

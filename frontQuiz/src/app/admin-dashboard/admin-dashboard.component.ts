@@ -61,6 +61,10 @@ export class AdminDashboardComponent implements OnInit {
     this.userService.getUserByUsername(username!).subscribe(
       (response: User) => {
         this.quizeses = response.quizzes;
+        if (response.quizzes.length <= 0) {
+          alert('User not has passed tests.')
+          return;
+        }
         console.log(response)
         this.openModal(openModal);
       },
@@ -83,4 +87,19 @@ export class AdminDashboardComponent implements OnInit {
   }
 
 
+  public searchUsers(searchUsers: string): void {
+    const res: User[] = [];
+    for (const usr of this?.users!) {
+      if (usr.username.toLowerCase().indexOf(searchUsers.toLowerCase()) !== -1 ||
+        usr.role.toLowerCase().indexOf(searchUsers.toLowerCase()) !== -1 ||
+        usr.id.toString().toLowerCase().indexOf(searchUsers.toLowerCase()) !== -1) {
+        res.push(usr);
+      }
+    }
+    this.users = res;
+    if (res.length === 0 ||
+      !searchUsers) {
+      this.allUsers();
+    }
+  }
 }

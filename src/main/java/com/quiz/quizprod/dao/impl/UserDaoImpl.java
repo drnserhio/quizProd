@@ -1,5 +1,6 @@
 package com.quiz.quizprod.dao.impl;
 
+import com.quiz.quizprod.dao.QuizDao;
 import com.quiz.quizprod.dao.UserDao;
 import com.quiz.quizprod.exception.*;
 import com.quiz.quizprod.model.impl.Question;
@@ -25,11 +26,14 @@ public class UserDaoImpl implements UserDao {
 
     private final EntityManagerFactory entityManagerFactory;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final QuizDao quizDao;
 
     public UserDaoImpl(EntityManagerFactory entityManagerFactory,
-                       BCryptPasswordEncoder bCryptPasswordEncoder) {
+                       BCryptPasswordEncoder bCryptPasswordEncoder,
+                       QuizDao quizDao) {
         this.entityManagerFactory = entityManagerFactory;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.quizDao = quizDao;
     }
 
 
@@ -38,6 +42,16 @@ public class UserDaoImpl implements UserDao {
             throws PasswordInvalidException, UsernameExistsException {
         validate(user.getUsername(), user.getPassword());
         user.setRole(Role.USER.name());
+        user.setQuizzes(new ArrayList<>());
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        return save(user);
+    }
+
+    @Override
+    public User registerAccountAdmin(User user)
+            throws PasswordInvalidException, UsernameExistsException {
+        validate(user.getUsername(), user.getPassword());
+        user.setRole(Role.ADMIN.name());
         user.setQuizzes(new ArrayList<>());
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         return save(user);
@@ -54,14 +68,21 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public boolean isExistByUsername(String username) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        return entityManager.createNativeQuery("select count(id) from users where username =:username")
+                .setParameter("username", username)
+                .getFirstResult() == 1;
+    }
+
+    @Override
     public User getUserByUsername(String username) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         User user = null;
         try {
-           user = (User) entityManager.createQuery("select usr from User usr where usr.username =:username")
+            user = (User) entityManager.createNativeQuery("select id, password, role, username from users where username =:username", User.class)
                     .setParameter("username", username)
-                    .getResultList()
-                    .get(0);
+                    .getSingleResult();
         } catch (Exception e) {
             entityManager.close();
             e.printStackTrace();
@@ -109,10 +130,9 @@ public class UserDaoImpl implements UserDao {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         User user = null;
         try {
-            user = (User) entityManager.createQuery("select usr from User usr where usr.id =:id")
+            user = (User) entityManager.createQuery("select usr from User usr where usr.id =:id", User.class)
                     .setParameter("id", id)
-                    .getResultList()
-                    .get(0);
+                    .getSingleResult();
         } catch (Exception e) {
             entityManager.close();
             e.printStackTrace();
@@ -141,18 +161,18 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean deleteById(Long id) throws AnswerUserFoundException {
+    public boolean deleteById(Long id) throws UserNotFoundException {
         boolean isDelete = false;
         if (existsById(id)) {
-            throw new AnswerUserFoundException("User not found");
+            throw new UserNotFoundException("User not found");
         }
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            AnswerUser quiz = new AnswerUser();
-            quiz.setId(id);
-            entityManager.remove(quiz);
+            entityManager.createQuery("delete from User usr where usr.id =:id")
+                    .setParameter("id", id)
+                    .executeUpdate();
             transaction.commit();
             isDelete = true;
         } catch (Exception e) {
@@ -169,7 +189,7 @@ public class UserDaoImpl implements UserDao {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         boolean isDelete = false;
         try {
-          isDelete = entityManager.createQuery("select count(id) from User where id =: id")
+            isDelete = entityManager.createQuery("select count(id) from User where id =: id")
                     .setParameter("id", id)
                     .getFirstResult() == 1;
         } catch (Exception e) {
@@ -267,6 +287,10 @@ public class UserDaoImpl implements UserDao {
                     .setParameter("userId", userId)
                     .setParameter("quizId", quizId)
                     .executeUpdate();
+//            Quiz quiz = quizDao.findById(quizId);
+//            User user = findById(userId);
+//            user.getQuizzes().add(quiz);
+//            save(user);
             transaction.commit();
             isSave = true;
         } catch (Exception e) {
@@ -277,8 +301,6 @@ public class UserDaoImpl implements UserDao {
         }
         return isSave;
     }
-
-
 
 
 }

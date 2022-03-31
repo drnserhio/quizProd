@@ -48,10 +48,16 @@ public record QuestionResource(QuestionService questionService) implements Defau
         return questionService.findAll(requestTable);
     }
 
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     @Override
     public boolean deleteById(
             @PathVariable("id") Long id) throws Exception {
         return questionService.deleteById(id);
+    }
+
+    @GetMapping("/get_questin_in_quiz/{quizId}")
+    public List<Question> getAllQuestionWithoutInQuiz(
+            @PathVariable("quizId") String quizId) {
+        return questionService.getAllQuestionWithoutInQuiz(quizId);
     }
 }

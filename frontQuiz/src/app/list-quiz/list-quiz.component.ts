@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, TemplateRef} from '@angular/core';
 import {UserService} from "../service/user.service";
 import {Quiz} from "../model/quiz";
 import {HttpErrorResponse} from "@angular/common/http";
@@ -25,7 +25,7 @@ export class ListQuizComponent implements OnInit {
   currentQuestion?: Question;
 
   countOfQuestion = 0;
-  flagEndTest = true;
+  flagRoleAccess = true;
   private answerSave?: string;
 
   constructor(private userService: UserService,
@@ -39,20 +39,20 @@ export class ListQuizComponent implements OnInit {
   currentUserId!: number;
 
   ngOnInit(): void {
+    this.checkRole();
     this.getFreeQuiz();
   }
 
 
-  private getFreeQuiz() {
+  getFreeQuiz() {
     let userId = parseInt(this.authService.getCurrentUserId());
     this.userService.getFreeQuizByUserId(userId).subscribe(
       (response: Quiz[]) => {
         if (response.length <= 0 ) {
-          this.notify.sendNotify(NotifyType.ERROR, "");
+          alert('You don\'t new open test.' );
           this.router.navigateByUrl("/profile")
         }
         this.profileQuiz = response;
-        console.log(response);
       },
       (error: HttpErrorResponse) => {
         alert(error.error.message);
@@ -60,10 +60,16 @@ export class ListQuizComponent implements OnInit {
     )
   }
 
-  onSelectModalQuiz(quizId: number) {
+  onSelectModalQuiz(quizId: number, content: any) {
     console.log(quizId);
    this.quizService.findById(quizId).subscribe(
       (response: Quiz) => {
+        if (response.questions.length <= 0) {
+          alert('This quiz not question.')
+          this.router.navigateByUrl("/list_quiz");
+          return;
+        }
+        this.openModal(content);
         this.selectQuiz = response;
         this.selectQuizQuestion = response.questions;
         this.currentQuestion = this.selectQuizQuestion![this.countOfQuestion];
@@ -74,6 +80,14 @@ export class ListQuizComponent implements OnInit {
     )
   }
 
+  openModal(content: any) {
+    this.modalService.open(content, {size: 'lg'}).result
+      .then((result) => {
+      }, (reason) => {
+
+      });
+  }
+
   saveChangeTest() {
     //TODO: add to user quiz
     const userId = parseInt(this.authService.getCurrentUserId());
@@ -82,6 +96,7 @@ export class ListQuizComponent implements OnInit {
         this.resetTestField();
       },
       (error: HttpErrorResponse) => {
+        this.onDeleteIfClose();
         console.log(error.error.message);
       }
     );
@@ -167,4 +182,26 @@ export class ListQuizComponent implements OnInit {
     console.log(answerSave);
   }
 
+  private checkRole() {
+    if (this.authService.getRoleAccess().endsWith('ADMIN')) {
+      this.flagRoleAccess = false;
+    }
+  }
+
+
+
+  public searchQuiz(searchQuiz: string): void {
+    const res: Quiz[] = [];
+    for (const quiz of this?.profileQuiz!) {
+      if (quiz.name.toLowerCase().indexOf(searchQuiz.toLowerCase()) !== -1 ||
+        quiz.notice.toLowerCase().indexOf(searchQuiz.toLowerCase()) !== -1 ) {
+        res.push(quiz);
+      }
+    }
+    this.profileQuiz = res;
+    if (res.length === 0 ||
+      !searchQuiz) {
+      this.getFreeQuiz();
+    }
+  }
 }

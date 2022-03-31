@@ -9,6 +9,7 @@ import {Quiz} from "../model/quiz";
 import {AnswersService} from "../service/answers.service";
 import {Answers} from "../model/answers";
 import {ModalDismissReasons, NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-passed-test',
@@ -16,15 +17,17 @@ import {ModalDismissReasons, NgbModal} from "@ng-bootstrap/ng-bootstrap";
   styleUrls: ['./passed-test.component.css']
 })
 export class PassedTestComponent implements OnInit {
+
   selectCurrentUserQuizes?: Quiz[];
   answerByQuizTest?: Answers[];
+  flagRoleAccess = true;
 
-  closeResult = '';
 
   constructor(private userService: UserService,
               private authService: AuthService,
               private notify: NotifyService,
               private answerService: AnswersService,
+              private router: Router,
               private modalService: NgbModal) { }
 
   ngOnInit(): void {
@@ -36,6 +39,11 @@ export class PassedTestComponent implements OnInit {
     this.userService.getUserByUsername(username).subscribe(
       (response: User) => {
         this.selectCurrentUserQuizes = response.quizzes;
+        if (response.quizzes.length <= 0) {
+          this.router.navigateByUrl('/profile')
+          alert('You don\'t have passed test.')
+        }
+        this.checkRole();
       },
       (error: HttpErrorResponse) => {
         this.notify.sendNotify(NotifyType.ERROR, error.error.message);
@@ -76,6 +84,27 @@ export class PassedTestComponent implements OnInit {
       return 'by clicking on a backdrop';
     } else {
       return `with: ${reason}`;
+    }
+  }
+
+  private checkRole() {
+    if (this.authService.getRoleAccess().endsWith('ADMIN')) {
+      this.flagRoleAccess = false;
+    }
+  }
+
+  public searchQuiz(searchQuiz: string): void {
+    const res: Quiz[] = [];
+    for (const quiz of this?.selectCurrentUserQuizes!) {
+      if (quiz.name.toLowerCase().indexOf(searchQuiz.toLowerCase()) !== -1 ||
+        quiz.notice.toLowerCase().indexOf(searchQuiz.toLowerCase()) !== -1 ) {
+        res.push(quiz);
+      }
+    }
+    this.selectCurrentUserQuizes = res;
+    if (res.length === 0 ||
+      !searchQuiz) {
+      this.getCurrentUser();
     }
   }
 }

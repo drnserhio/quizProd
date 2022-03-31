@@ -54,7 +54,7 @@ public class QuestionDaoImpl implements QuestionDao {
         } finally {
             entityManager.close();
         }
-        return null;
+        return save;
     }
 
     @Override
@@ -104,9 +104,9 @@ public class QuestionDaoImpl implements QuestionDao {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            Question question = new Question();
-            question.setId(id);
-            entityManager.remove(question);
+            entityManager.createQuery("delete from Question q where q.id =:id")
+                    .setParameter("id", id)
+                    .executeUpdate();
             transaction.commit();
             isDelete = true;
         } catch (Exception e) {
@@ -125,5 +125,20 @@ public class QuestionDaoImpl implements QuestionDao {
                 .setParameter("id", id)
                 .setHint(QueryHints.HINT_READONLY, true)
                 .getFirstResult() == 1;
+    }
+
+    @Override
+    public List<Question> getAllQuestionWithoutInQuiz(String quizId) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        List<Question> questions = new ArrayList<>();
+        try {
+           questions = entityManager.createNativeQuery("select id, answer, bad_first_answer, bad_second_answer, question from questions quest where quest.id not in (select questions_id from quizes_questions where quiz_id =:quizId)", Question.class)
+                    .setParameter("quizId", quizId)
+                   .getResultList();
+        } catch (Exception e) {
+            entityManager.close();
+            e.printStackTrace();
+        }
+        return questions;
     }
 }

@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit {
           this.authService.saveToken(token!);
           this.authService.saveUsernameToLocalCahe(response.body?.username!);
           this.authService.saveCurrentUserId(response.body?.id!);
+          this.authService.saveRoleAccess(response.body?.role!);
           this.router.navigateByUrl('/profile');
           this.loadingIcon = false;
         },

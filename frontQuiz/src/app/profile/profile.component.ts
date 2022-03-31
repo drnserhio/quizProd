@@ -13,6 +13,7 @@ import {Quiz} from "../model/quiz";
 export class ProfileComponent implements OnInit {
   profile?: User;
   profileQuiz?: Quiz[];
+  flagRoleAccess = true;
 
   constructor(private authService: AuthService,
               private userService: UserService) { }
@@ -28,6 +29,7 @@ export class ProfileComponent implements OnInit {
       (response: User) => {
         console.log(response);
         this.profile = response;
+       this.checkRole()
         if (this.profile) {
           this.getFreeQuiz();
         }
@@ -49,5 +51,16 @@ export class ProfileComponent implements OnInit {
         alert(error.error.message);
       }
     )
+  }
+
+  logOut() {
+    this.authService.logOut();
+    window.location.reload();
+  }
+
+  private checkRole() {
+    if (this.authService.getRoleAccess().endsWith('ADMIN')) {
+      this.flagRoleAccess = false;
+    }
   }
 }
