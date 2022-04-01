@@ -64,7 +64,7 @@
 <div class="row m-0 h-100">
   <div class="col p-0 bg-custom d-flex justify-content-center align-items-center flex-column w-100">
     <h1 class="text-white-50" style="font-size: 50px">Login in</h1>
-    <form #sign="ngForm" class="w-70 text-center" action="#">
+    <form #sign="ngForm" class="w-70 text-center" action="#" (keyup.enter)="signIn(sign.value)">
       <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Username</label>
         <input type="text" class="form-control" id="exampleFormControlInput1" name="username" placeholder="username"

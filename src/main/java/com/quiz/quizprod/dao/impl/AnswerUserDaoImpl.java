@@ -132,7 +132,7 @@ public class AnswerUserDaoImpl implements AnswerUserDao {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         List<AnswerUser> answers = new ArrayList<>();
         try {
-           answers = entityManager.createNativeQuery("select id, answer_successful, answer_user, date_end, date_start, id_code, is_successful_answer, question, quiz_id, username_active from answers_users where quiz_id =:quizId and username_active =:activeUsername", AnswerUser.class)
+           answers = entityManager.createNativeQuery("select id, answerSuccessful, answerUser, dateEnd, dateStart, idCode, isSuccessfulAnswer, question, quizId, usernameActive from answersUsers where quizId =:quizId and usernameActive =:activeUsername", AnswerUser.class)
                     .setParameter("quizId", quizId)
                     .setParameter("activeUsername", username)
                     .getResultList();

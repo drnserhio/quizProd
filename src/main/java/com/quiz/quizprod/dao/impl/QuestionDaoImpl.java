@@ -100,6 +100,7 @@ public class QuestionDaoImpl implements QuestionDao {
         if (existsById(id)) {
             throw new QuestionNotFoundException("Question not found");
         }
+        deleteFromConnTable(id);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
@@ -118,6 +119,23 @@ public class QuestionDaoImpl implements QuestionDao {
         return isDelete;
     }
 
+    private void deleteFromConnTable(Long questionId) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            entityManager.createNativeQuery("delete from quizes_questions qq where qq.questions_id =:questionId")
+                    .setParameter("questionId", questionId)
+                    .executeUpdate();
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+    }
+
     @Override
     public boolean existsById(Long id) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -132,7 +150,7 @@ public class QuestionDaoImpl implements QuestionDao {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         List<Question> questions = new ArrayList<>();
         try {
-           questions = entityManager.createNativeQuery("select id, answer, bad_first_answer, bad_second_answer, question from questions quest where quest.id not in (select questions_id from quizes_questions where quiz_id =:quizId)", Question.class)
+           questions = entityManager.createNativeQuery("select id, answer, badFirstAnswer, badSecondAnswer, question from questions quest where quest.id not in (select questions_id from quizes_questions where quiz_id =:quizId)", Question.class)
                     .setParameter("quizId", quizId)
                    .getResultList();
         } catch (Exception e) {

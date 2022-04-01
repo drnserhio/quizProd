@@ -34,16 +34,16 @@
 
   <!-- Page Content  -->
 
-  <div id="content" >
-    <div class="container rounded bg-white">
-      <div class="row justify-content-center text-center">
-        <div class="col-md-3">
+  <div id="content" style="background-color: #212529;" class="text-white">
+    <div class="container rounded ">
+      <div class="row justify-content-center text-center mt-lg-5">
+        <div class="col-md-3 mb-1">
           <div class="d-flex flex-column align-items-center text-center p-3 py-5">
             <img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg">
-            <span class="text-black-50">Username: {{profile?.username}}</span><span> </span>
-            <span class="text-black-50">{{profile?.role}}</span><span></span>
-            <span class="text-black-50">Quiz open: {{profileQuiz?.length}}</span> <span> </span>
-            <span style="cursor: pointer;" (click)="logOut()">
+            <span >Username: {{profile?.username}}</span><span> </span>
+            <span >{{profile?.role}}</span><span></span>
+            <span >Quiz open: {{profileQuiz?.length}}</span> <span> </span>
+            <span  class="mt-2" title="log out" style="cursor: pointer;" (click)="logOut()">
               <i class="fas fa-sign-out-alt"></i>
             </span>
 

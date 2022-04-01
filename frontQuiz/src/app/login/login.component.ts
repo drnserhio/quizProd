@@ -48,13 +48,20 @@ export class LoginComponent implements OnInit {
         },
         (errorResponse: HttpErrorResponse) => {
           this.loadingIcon = false;
-          this.notify.sendNotify(NotifyType.ERROR, errorResponse.error.message);
+          this.sendNotifyError(NotifyType.ERROR, errorResponse.error.message);
+          alert(errorResponse.error.message);
           console.log(errorResponse);
         }
       )
     );
   }
 
-
+  private sendNotifyError(notifyType: NotifyType, message: string): void {
+    if (message) {
+      this.notify.sendNotify(notifyType, message);
+    } else {
+      this.notify.sendNotify(notifyType, 'An occured. Please try again.');
+    }
+  }
 
 }

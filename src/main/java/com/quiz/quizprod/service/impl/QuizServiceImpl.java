@@ -2,6 +2,7 @@ package com.quiz.quizprod.service.impl;
 
 import com.quiz.quizprod.dao.QuizDao;
 import com.quiz.quizprod.exception.domain.AnswerUserNotFoundException;
+import com.quiz.quizprod.exception.domain.QuestionNotFoundException;
 import com.quiz.quizprod.exception.domain.QuizExistsException;
 import com.quiz.quizprod.model.impl.Quiz;
 import com.quiz.quizprod.service.QuizService;
@@ -61,4 +62,5 @@ public class QuizServiceImpl implements QuizService {
             throws QuizExistsException {
         return quizDao.deleteFromQuiz(quizId, questionId);
     }
+
 }

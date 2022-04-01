@@ -1,7 +1,7 @@
 package com.quiz.quizprod.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.quiz.quizprod.model.response.CustomHttpResponse;
+import com.quiz.quizprod.model.response.HttpResponseBody;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.stereotype.Component;
@@ -20,8 +20,8 @@ public class CustomEntyPoint extends Http403ForbiddenEntryPoint {
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
                          AuthenticationException authenticationException) throws IOException {
-        CustomHttpResponse res =
-                new CustomHttpResponse(
+        HttpResponseBody res =
+                new HttpResponseBody(
                         FORBIDDEN.value(),
                         FORBIDDEN,
                         FORBIDDEN.getReasonPhrase(),

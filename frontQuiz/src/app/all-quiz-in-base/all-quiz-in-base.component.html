@@ -51,15 +51,16 @@
 
   <!-- Page Content  -->
 
-  <div id="content" class="container-fluid">
+  <div id="content" class="container-fluid" style="background-color: #212529;">
 
 
-    <table class="table table-hover justify-content-center">
+    <table class="table text-center text-white table-hover justify-content-center">
       <thead>
       <tr>
         <th scope="col">Quiz theme</th>
         <th scope="col">Count question</th>
         <th scope="col">Notice</th>
+        <th>Delete</th>
       </tr>
       </thead>
       <tbody *ngFor="let quiz of quizes" style="cursor: pointer;">
@@ -67,7 +68,11 @@
         <td (click)="onSelectModalQuiz(quiz.id!, content)" scope="row">{{quiz.name}}</td>
         <td (click)="onSelectModalQuiz(quiz.id!,content)">{{quiz?.questions?.length}}</td>
         <td (click)="onSelectModalQuiz(quiz.id!,content)">{{quiz.notice}}</td>
+        <td  (click)="onDeleteQuiz(quiz.id!)">
+          <i class="fas fa-trash text-danger"></i>
+        </td>
       </tr>
+
 
       </tbody>
     </table>
@@ -80,9 +85,10 @@
 </html >
 
 <ng-template #content let-modal >
-  <div class="modal-body">
+  <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">All question in quiz</h4>
-
+  </div>
+  <div class="modal-body">
     <table class="table table-hover table-sm table-bordered justify-content-center">
       <thead class="text-center" >
       <tr>
@@ -91,7 +97,7 @@
         <th scope="col">SUCCESS_ANSWER</th>
         <th scope="col">BADLY_FIRST_ANSWER</th>
         <th scope="col">BADLY_SECOND_ANSWER</th>
-        <th scope="col" class="text-center">DEL</th>
+        <th scope="col">DEL</th>
       </tr>
       </thead>
       <tbody *ngFor="let quest of selectQuiz?.questions!" style="cursor: pointer;" class="text-center" >

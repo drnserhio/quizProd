@@ -24,6 +24,7 @@ public interface UserDao extends BaseDao<User>{
 
     boolean insertQuizToUserAfterTest(Long quizId, Long userId);
 
+    void deleteByUsername(String username);
 }
 
 

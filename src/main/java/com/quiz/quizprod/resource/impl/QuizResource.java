@@ -51,7 +51,7 @@ public record QuizResource(QuizService quizService) implements DefaultResource<Q
         return quizService.findAll(requestTable);
     }
 
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     @Override
     public boolean deleteById(
             @PathVariable Long id) throws Exception {
@@ -72,4 +72,5 @@ public record QuizResource(QuizService quizService) implements DefaultResource<Q
             @PathVariable Long questionId) throws QuizExistsException, AnswerUserNotFoundException {
         return quizService.deleteFromQuiz(quizId, questionId);
     }
+
 }

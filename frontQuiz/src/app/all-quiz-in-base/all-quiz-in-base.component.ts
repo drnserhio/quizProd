@@ -6,6 +6,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {QuestionService} from "../service/question.service";
 import {Question} from "../model/question";
 import {Bodyid} from "../model/bodyid";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-all-quiz-in-base',
@@ -20,6 +21,7 @@ export class AllQuizInBaseComponent implements OnInit {
 
   constructor(private quizService: QuizService,
               private questionService: QuestionService,
+              private router: Router,
               private modalService: NgbModal) { }
 
   ngOnInit(): void {
@@ -30,6 +32,10 @@ export class AllQuizInBaseComponent implements OnInit {
     this.quizService.findAll().subscribe(
       (response: Quiz[]) => {
         this.quizes = response;
+        if (response.length <= 0) {
+          alert("Quiz's don't have in base. Please create.")
+          this.router.navigateByUrl("/create_quiz");
+        }
       },
       (error: HttpErrorResponse) => {
         alert(error.error.message);
@@ -125,6 +131,20 @@ export class AllQuizInBaseComponent implements OnInit {
       },
       (error: HttpErrorResponse) => {
         alert(error.error.message)
+      }
+    )
+  }
+
+  onDeleteQuiz(quizId: number) {
+    this.quizService.deleteById(quizId).subscribe(
+      (response: boolean) => {
+        if (response) {
+          alert("Quiz delete succesfull");
+          this.allQuiz();
+        }
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.error.message);
       }
     )
   }

@@ -22,7 +22,7 @@ public class User extends DefaultEntity {
     private String password;
     private String role;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = EAGER)
+    @ManyToMany(cascade = ALL, fetch = EAGER)
     @JoinTable(
             name = "users_quizzes",
             joinColumns = @JoinColumn(name = "user_id"),

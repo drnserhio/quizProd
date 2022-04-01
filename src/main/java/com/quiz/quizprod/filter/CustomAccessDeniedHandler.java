@@ -1,7 +1,7 @@
 package com.quiz.quizprod.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.quiz.quizprod.model.response.CustomHttpResponse;
+import com.quiz.quizprod.model.response.HttpResponseBody;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
@@ -25,8 +25,8 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
                        HttpServletResponse response,
                        AccessDeniedException accessDeniedException)
             throws IOException, ServletException {
-        CustomHttpResponse res =
-                new CustomHttpResponse(
+        HttpResponseBody res =
+                new HttpResponseBody(
                         UNAUTHORIZED.value(),
                         UNAUTHORIZED,
                         UNAUTHORIZED.getReasonPhrase(),

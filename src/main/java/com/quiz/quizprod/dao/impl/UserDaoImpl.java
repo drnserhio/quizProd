@@ -302,5 +302,22 @@ public class UserDaoImpl implements UserDao {
         return isSave;
     }
 
+    @Override
+    public void deleteByUsername(String username) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            entityManager.createQuery("delete from User where username =:username")
+                    .setParameter("username", username)
+                    .executeUpdate();
+        } catch (Exception e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+    }
+
 
 }

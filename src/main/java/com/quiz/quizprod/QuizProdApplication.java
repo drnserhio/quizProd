@@ -99,7 +99,8 @@ public class QuizProdApplication {
 
             if (userDao.getUserByUsername("joy") != null) {
                 User joy = userDao.getUserByUsername("joy");
-                userDao.deleteById(joy.getId());
+                userDao.deleteByUsername("joy");
+                userDao.deleteByUsername("jack");
             }
             User admin = new User();
             admin.setUsername("joy");

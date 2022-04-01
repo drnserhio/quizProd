@@ -8341,3 +8341,7 @@ a[data-toggle="collapse"] {
 
 .subscribe-form .form-control {
   background: #3b4ec6; }
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background-color: white;
+}

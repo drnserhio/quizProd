@@ -37,4 +37,5 @@ public class ConnectionJpaProp {
     @Value("${spring.jpa.hibernate.jdbc.fetch_size}")
     private String fetchSize;
 
+
 }

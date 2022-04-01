@@ -1,8 +1,10 @@
 package com.quiz.quizprod.dao.impl;
 
 import com.quiz.quizprod.dao.QuizDao;
+import com.quiz.quizprod.exception.domain.QuestionNotFoundException;
 import com.quiz.quizprod.exception.domain.QuizExistsException;
 import com.quiz.quizprod.exception.domain.AnswerUserNotFoundException;
+import com.quiz.quizprod.exception.domain.QuizNotFoundException;
 import com.quiz.quizprod.model.impl.Quiz;
 import com.quiz.quizprod.table.RequestTable;
 import com.quiz.quizprod.table.ResponseTable;
@@ -113,27 +115,28 @@ public class QuizDaoImpl implements QuizDao {
     }
 
     @Override
-    public boolean deleteById(Long id) throws AnswerUserNotFoundException {
-        boolean isDelete = false;
+    public boolean deleteById(Long id) throws QuizNotFoundException {
+        boolean iseDelete = false;
         if (existsById(id)) {
-            throw new AnswerUserNotFoundException("Quiz not found");
+            throw new QuizNotFoundException("Quiz not found");
         }
+        deleteQuizInConnTable(id);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            Quiz quiz = new Quiz();
-            quiz.setId(id);
-            entityManager.remove(quiz);
+            entityManager.createQuery("delete from Quiz qz where qz.id =:quizId")
+                    .setParameter("quizId", id)
+                    .executeUpdate();
             transaction.commit();
-            isDelete = true;
+            iseDelete = true;
         } catch (Exception e) {
             transaction.rollback();
             e.printStackTrace();
         } finally {
             entityManager.close();
         }
-        return isDelete;
+        return iseDelete;
     }
 
     @Override
@@ -195,6 +198,23 @@ public class QuizDaoImpl implements QuizDao {
             e.printStackTrace();
         }
         return isDeleteSuccessful;
+    }
+
+    private void deleteQuizInConnTable(Long quizId) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            entityManager.createNativeQuery("delete from quizes_questions qq where qq.Quiz_id =:quizId")
+                    .setParameter("quizId", quizId)
+                    .executeUpdate();
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
     }
 
     private void deletefromQuiz(Long quizId, Long questId) {
