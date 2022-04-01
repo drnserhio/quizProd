@@ -205,7 +205,7 @@ public class QuizDaoImpl implements QuizDao {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            entityManager.createNativeQuery("delete from quizes_questions qq where qq.Quiz_id =:quizId")
+            entityManager.createNativeQuery("delete from users_quizzes where quizzes_id =:quizId")
                     .setParameter("quizId", quizId)
                     .executeUpdate();
             transaction.commit();
