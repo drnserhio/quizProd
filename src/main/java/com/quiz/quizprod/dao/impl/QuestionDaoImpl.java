@@ -1,7 +1,7 @@
 package com.quiz.quizprod.dao.impl;
 
 import com.quiz.quizprod.dao.QuestionDao;
-import com.quiz.quizprod.exception.QuestionNotFoundException;
+import com.quiz.quizprod.exception.domain.QuestionNotFoundException;
 import com.quiz.quizprod.model.impl.Question;
 import com.quiz.quizprod.table.RequestTable;
 import com.quiz.quizprod.table.ResponseTable;

@@ -1,17 +1,14 @@
 package com.quiz.quizprod.dao;
 
-import com.quiz.quizprod.exception.AnswerUserFoundException;
-import com.quiz.quizprod.exception.QuizExistsException;
-import com.quiz.quizprod.model.impl.Question;
+import com.quiz.quizprod.exception.domain.AnswerUserNotFoundException;
+import com.quiz.quizprod.exception.domain.QuizExistsException;
 import com.quiz.quizprod.model.impl.Quiz;
-
-import java.util.List;
 
 public interface QuizDao extends BaseDao<Quiz> {
 
 
-    boolean creatQuizWithQuestion(Long quizId, Long...questionId) throws AnswerUserFoundException, QuizExistsException;
-    boolean deleteFromQuiz(Long quizId, Long...id) throws QuizExistsException;
+    boolean creatQuizWithQuestion(Long quizId, Long...questionId) throws AnswerUserNotFoundException, QuizExistsException;
+    boolean deleteFromQuiz(Long quizId, Long questionId) throws QuizExistsException;
 
 
 }

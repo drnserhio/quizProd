@@ -2,7 +2,10 @@ package com.quiz.quizprod.dao.impl;
 
 import com.quiz.quizprod.dao.QuizDao;
 import com.quiz.quizprod.dao.UserDao;
-import com.quiz.quizprod.exception.*;
+import com.quiz.quizprod.exception.domain.PasswordInvalidException;
+import com.quiz.quizprod.exception.domain.QuizExistsException;
+import com.quiz.quizprod.exception.domain.UserNotFoundException;
+import com.quiz.quizprod.exception.domain.UsernameExistsException;
 import com.quiz.quizprod.model.impl.Question;
 import com.quiz.quizprod.model.impl.Quiz;
 import com.quiz.quizprod.model.impl.AnswerUser;
@@ -10,7 +13,6 @@ import com.quiz.quizprod.model.impl.User;
 import com.quiz.quizprod.model.role.Role;
 import com.quiz.quizprod.table.RequestTable;
 import com.quiz.quizprod.table.ResponseTable;
-import org.hibernate.jpa.QueryHints;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
@@ -85,7 +87,6 @@ public class UserDaoImpl implements UserDao {
                     .getSingleResult();
         } catch (Exception e) {
             entityManager.close();
-            e.printStackTrace();
         }
         return user;
     }
@@ -146,7 +147,6 @@ public class UserDaoImpl implements UserDao {
         List<User> users = new ArrayList<>();
         try {
             users = entityManager.createQuery("select usr from User usr")
-                    .setHint(QueryHints.HINT_READONLY, true)
                     .getResultList();
         } catch (Exception e) {
             entityManager.close();

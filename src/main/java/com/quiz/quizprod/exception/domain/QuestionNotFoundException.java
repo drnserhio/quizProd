@@ -1,4 +1,4 @@
-package com.quiz.quizprod.exception;
+package com.quiz.quizprod.exception.domain;
 
 public class QuestionNotFoundException extends Exception {
     public QuestionNotFoundException(String message) {

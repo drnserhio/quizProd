@@ -1,4 +1,4 @@
-package com.quiz.quizprod.exception;
+package com.quiz.quizprod.exception.domain;
 
 public class UserNotFoundException extends Exception {
     public UserNotFoundException(String message) {

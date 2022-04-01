@@ -1,7 +1,7 @@
 package com.quiz.quizprod.dao.impl;
 
 import com.quiz.quizprod.dao.AnswerUserDao;
-import com.quiz.quizprod.exception.AnswerUserFoundException;
+import com.quiz.quizprod.exception.domain.AnswerUserNotFoundException;
 import com.quiz.quizprod.model.impl.AnswerUser;
 import com.quiz.quizprod.table.RequestTable;
 import com.quiz.quizprod.table.ResponseTable;
@@ -95,10 +95,10 @@ public class AnswerUserDaoImpl implements AnswerUserDao {
     }
 
     @Override
-    public boolean deleteById(Long id) throws AnswerUserFoundException {
+    public boolean deleteById(Long id) throws AnswerUserNotFoundException {
         boolean isDelete = false;
         if (existsById(id)) {
-            throw new AnswerUserFoundException("Answer user not found");
+            throw new AnswerUserNotFoundException("Answer user not found");
         }
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();

@@ -108,4 +108,24 @@ export class AllQuizInBaseComponent implements OnInit {
       }
     )
   }
+
+  onDeleteQuestionInQuiz(questionId: number) {
+    this.quizService.deleteFromQuiz(this.selectQuiz?.id!, questionId).subscribe(
+      (response: boolean) => {
+        alert("Question delete in quiz");
+        this.resetSelectQuiz();
+      }
+    )
+  }
+
+  private resetSelectQuiz() {
+    this.quizService.findById(this.selectQuiz?.id!).subscribe(
+      (response: Quiz) => {
+        this.selectQuiz = response;
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.error.message)
+      }
+    )
+  }
 }

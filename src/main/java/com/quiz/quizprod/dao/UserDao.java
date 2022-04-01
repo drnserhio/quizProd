@@ -1,10 +1,9 @@
 package com.quiz.quizprod.dao;
 
-import com.quiz.quizprod.exception.PasswordInvalidException;
-import com.quiz.quizprod.exception.QuizExistsException;
-import com.quiz.quizprod.exception.UserExistsException;
-import com.quiz.quizprod.exception.UsernameExistsException;
-import com.quiz.quizprod.model.impl.AnswerUser;
+import com.quiz.quizprod.exception.domain.PasswordInvalidException;
+import com.quiz.quizprod.exception.domain.QuizExistsException;
+import com.quiz.quizprod.exception.domain.UserExistsException;
+import com.quiz.quizprod.exception.domain.UsernameExistsException;
 import com.quiz.quizprod.model.impl.Question;
 import com.quiz.quizprod.model.impl.Quiz;
 import com.quiz.quizprod.model.impl.User;

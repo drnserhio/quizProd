@@ -3,23 +3,17 @@ package com.quiz.quizprod;
 import com.quiz.quizprod.dao.QuestionDao;
 import com.quiz.quizprod.dao.QuizDao;
 import com.quiz.quizprod.dao.UserDao;
-import com.quiz.quizprod.exception.PasswordInvalidException;
-import com.quiz.quizprod.exception.UserExistsException;
-import com.quiz.quizprod.exception.UsernameExistsException;
 import com.quiz.quizprod.model.impl.Question;
 import com.quiz.quizprod.model.impl.Quiz;
 import com.quiz.quizprod.model.impl.User;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.ApplicationEvent;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -28,7 +22,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {
+        DataSourceAutoConfiguration.class,
+        DataSourceTransactionManagerAutoConfiguration.class,
+        HibernateJpaAutoConfiguration.class })
 public class QuizProdApplication {
 
 
@@ -104,10 +101,14 @@ public class QuizProdApplication {
                 User joy = userDao.getUserByUsername("joy");
                 userDao.deleteById(joy.getId());
             }
+            User admin = new User();
+            admin.setUsername("joy");
+            admin.setPassword("5600");
             User user = new User();
-            user.setUsername("joy");
+            user.setUsername("jack");
             user.setPassword("5600");
-            userDao.registerAccountAdmin(user);
+            userDao.registerAccountAdmin(admin);
+            userDao.registerAccount(user);
         };
     }
 

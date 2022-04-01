@@ -1,9 +1,8 @@
 package com.quiz.quizprod.resource.impl;
 
-import com.quiz.quizprod.exception.AnswerUserFoundException;
-import com.quiz.quizprod.exception.QuizExistsException;
+import com.quiz.quizprod.exception.domain.AnswerUserNotFoundException;
+import com.quiz.quizprod.exception.domain.QuizExistsException;
 import com.quiz.quizprod.model.impl.BodyId;
-import com.quiz.quizprod.model.impl.Question;
 import com.quiz.quizprod.model.impl.Quiz;
 import com.quiz.quizprod.resource.DefaultResource;
 import com.quiz.quizprod.service.QuizService;
@@ -63,7 +62,14 @@ public record QuizResource(QuizService quizService) implements DefaultResource<Q
     public boolean creatQuizWithQuestion(
             @PathVariable Long quizId,
             @RequestBody BodyId ids)
-            throws QuizExistsException, AnswerUserFoundException {
+            throws QuizExistsException, AnswerUserNotFoundException {
         return quizService.creatQuizWithQuestion(quizId, ids.getIds());
+    }
+
+    @GetMapping("/delete_question_in_quiz/{quizId}/{questionId}")
+    public boolean deleteFromQuiz(
+            @PathVariable Long quizId,
+            @PathVariable Long questionId) throws QuizExistsException, AnswerUserNotFoundException {
+        return quizService.deleteFromQuiz(quizId, questionId);
     }
 }

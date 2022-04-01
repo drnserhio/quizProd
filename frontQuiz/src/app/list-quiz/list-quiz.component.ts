@@ -16,6 +16,7 @@ import {Router} from "@angular/router";
   templateUrl: './list-quiz.component.html',
   styleUrls: ['./list-quiz.component.css']
 })
+
 export class ListQuizComponent implements OnInit {
 
   profileQuiz?: Quiz[];
@@ -27,6 +28,7 @@ export class ListQuizComponent implements OnInit {
   countOfQuestion = 0;
   flagRoleAccess = true;
   private answerSave?: string;
+
 
   constructor(private userService: UserService,
               private authService: AuthService,
@@ -61,8 +63,7 @@ export class ListQuizComponent implements OnInit {
   }
 
   onSelectModalQuiz(quizId: number, content: any) {
-    console.log(quizId);
-   this.quizService.findById(quizId).subscribe(
+    this.quizService.findById(quizId).subscribe(
       (response: Quiz) => {
         if (response.questions.length <= 0) {
           alert('This quiz not question.')
@@ -152,6 +153,7 @@ export class ListQuizComponent implements OnInit {
 
 
   open(content: any) {
+
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {

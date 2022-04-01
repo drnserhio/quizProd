@@ -1,8 +1,8 @@
 package com.quiz.quizprod.dao.impl;
 
 import com.quiz.quizprod.dao.QuizDao;
-import com.quiz.quizprod.exception.QuizExistsException;
-import com.quiz.quizprod.exception.AnswerUserFoundException;
+import com.quiz.quizprod.exception.domain.QuizExistsException;
+import com.quiz.quizprod.exception.domain.AnswerUserNotFoundException;
 import com.quiz.quizprod.model.impl.Quiz;
 import com.quiz.quizprod.table.RequestTable;
 import com.quiz.quizprod.table.ResponseTable;
@@ -113,10 +113,10 @@ public class QuizDaoImpl implements QuizDao {
     }
 
     @Override
-    public boolean deleteById(Long id) throws AnswerUserFoundException {
+    public boolean deleteById(Long id) throws AnswerUserNotFoundException {
         boolean isDelete = false;
         if (existsById(id)) {
-            throw new AnswerUserFoundException("Quiz not found");
+            throw new AnswerUserNotFoundException("Quiz not found");
         }
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -153,7 +153,7 @@ public class QuizDaoImpl implements QuizDao {
             throw new QuizExistsException("Quiz not found.");
         }
         try {
-            for (Long qusId: questionId) {
+            for (Long qusId : questionId) {
                 insertToQuiz(quizId, qusId);
             }
             isSuccessful = true;
@@ -182,20 +182,18 @@ public class QuizDaoImpl implements QuizDao {
     }
 
     @Override
-    public boolean deleteFromQuiz(Long quizId, Long... questionId)
+    public boolean deleteFromQuiz(Long quizId, Long questionId)
             throws QuizExistsException {
         boolean isDeleteSuccessful = false;
-       if (existsById(quizId)) {
-           throw new QuizExistsException("Quiz not found");
-       }
-       try {
-           for (Long questId : questionId) {
-               deletefromQuiz(quizId, questId);
-           }
-           isDeleteSuccessful = true;
-       } catch (Exception e) {
-           e.printStackTrace();
-       }
+        if (existsById(quizId)) {
+            throw new QuizExistsException("Quiz not found");
+        }
+        try {
+            deletefromQuiz(quizId, questionId);
+            isDeleteSuccessful = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return isDeleteSuccessful;
     }
 
@@ -204,7 +202,7 @@ public class QuizDaoImpl implements QuizDao {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            entityManager.createNativeQuery("delete from quizes_questions where quiz_id =: quizId and questions_id =:questionId")
+            entityManager.createNativeQuery("delete from quizes_questions where quiz_id =:quizId and questions_id =:questionId")
                     .setParameter("quizId", quizId)
                     .setParameter("questionId", questId)
                     .executeUpdate();

@@ -91,6 +91,7 @@
         <th scope="col">SUCCESS_ANSWER</th>
         <th scope="col">BADLY_FIRST_ANSWER</th>
         <th scope="col">BADLY_SECOND_ANSWER</th>
+        <th scope="col" class="text-center">DEL</th>
       </tr>
       </thead>
       <tbody *ngFor="let quest of selectQuiz?.questions!" style="cursor: pointer;" class="text-center" >
@@ -100,6 +101,9 @@
         <td>{{quest.answer}}</td>
         <td>{{quest.badFirstAnswer}}</td>
         <td>{{quest.badSecondAnswer}}</td>
+        <td style="cursor: pointer;" (click)="onDeleteQuestionInQuiz(quest.id)">
+          <i class="fas fa-minus text-danger"></i>
+        </td>
       </tr>
 
       </tbody>
