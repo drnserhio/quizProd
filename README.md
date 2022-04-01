@@ -29,14 +29,14 @@ Admin
 --------
 
 ```sh
-username: joy; password:5600
+username: joy; password:5600;
 ```
 
 User
 --------
 
 ```sh
-username: jack; password:5600
+username: jack; password:5600;
 ```
 
 # Getting started
