@@ -10,25 +10,26 @@ services:
       MYSQL_PASSWORD: root
       MYSQL_DATABASE: quiz
     ports:
-      - 3306:3306
+      - "3306:3306"
 
   quiz-container:
     restart: always
     image: quiz
     ports:
-      - 4771:4771
+      - "4771:4771"
     build:
       context: "./"
       dockerfile: "Dockerfile"
     depends_on:
       - mysql
+      - angular
 
   angular:
     build:
       context: ./frontQuiz
       dockerfile: Dockerfile-angular
     ports:
-      - 4200:4200
+      - "4200:4200"
     container_name: angular
     volumes:
       - ./frontQuiz:/usr/src/app/frontQuiz
